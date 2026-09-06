@@ -4,10 +4,38 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { courseByCourseId } from '../../src/store/course';
 import { onCourseApiCaptured } from '../../src/capture/course';
-import { buildCourseView } from '../../src/features/coursePanel';
+import { buildCourseView, renderCoursePanel } from '../../src/features/coursePanel';
 
-// scheduleCourseRefresh 的防抖定时回调需要 document 桩
-(globalThis as any).document = { getElementById: () => null };
+// 轻量 DOM 桩：捕获渲染出的 HTML，用于“第二层子分组是否都渲染出来”的标记层断言
+let capturedHtml = '';
+const contentEl: any = {
+    dataset: {},
+    style: {},
+    classList: { contains: () => false },
+    set innerHTML(v: string) { capturedHtml = v; },
+    get innerHTML() { return capturedHtml; },
+    querySelector: () => null,
+    querySelectorAll: () => [],
+    addEventListener: () => {},
+    scrollHeight: 0
+};
+const panelEl: any = {
+    classList: { contains: () => false },
+    querySelector: (sel: string) => (sel === '[data-content="course-info"]' ? contentEl : null),
+    addEventListener: () => {}
+};
+(globalThis as any).document = {
+    getElementById: () => panelEl,
+    // escapeHtml 内部用 textContent -> innerHTML 做转义，这里模拟浏览器行为
+    createElement: () => {
+        let text = '';
+        return {
+            set textContent(v: string) { text = String(v); },
+            get innerHTML() { return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+        };
+    }
+};
+(globalThis as any).requestAnimationFrame = (fn: any) => { fn(); return 1; };
 
 const ROOT = process.cwd(); // 测试必须从项目根运行，以便读取 samples/
 const S = 'https://ke.fenbi.com/win/gwy/v3';
@@ -85,6 +113,15 @@ function assert(cond: any, msg: string): void {
     const s2b: any = yuyan2 && yuyan2.children[1];
     assert(s2b && s2b.loaded && s2b.episodes.length === 2, 'L3: 补捕获后 系列2 应可正常显示 2 课时');
     assert(v2 && v2.totalEpisodes === 7, 'L3: 补捕获后整树课时数应为 7，实际=' + (v2 ? v2.totalEpisodes : -1));
+
+    // 标记层断言：第二层（【言语】下的系列分组）必须全部出现在渲染 HTML 中，不能只显示第一项
+    renderCoursePanel();
+    const wrapperCount = (capturedHtml.match(/class="course-sub-group"/g) || []).length;
+    assert(wrapperCount === 7, 'L3 UI: 第二层应渲染出 7 个子分组包装，实际=' + wrapperCount);
+    ['系列1：言语必考重点', '系列2：言语提分必学', '系列3：言语提分金钥匙', '系列4：言语提分必学', '系列5：言语提分必学', '系列6：直击痛点', '系列7：学霸养成专题'].forEach((t) => {
+        assert(capturedHtml.includes(t), 'L3 UI: 渲染标记中应包含「' + t + '」');
+    });
+    assert((capturedHtml.match(/class="id-item"/g) || []).length === 7, 'L3 UI: 应渲染 7 条课时，实际=' + (capturedHtml.match(/class="id-item"/g) || []).length);
 }
 
 // ---------- 无 detail、无顶层（深层直开）：应直接用 episode_nodes 包装展示 ----------

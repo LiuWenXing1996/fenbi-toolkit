@@ -332,7 +332,8 @@ function renderGroupBody(g: CourseGroup, depth: number, path: number[]): string 
     return html;
 }
 
-function renderCoursePanel(): void {
+// 导出渲染入口供无 DOM 回归验证（标记层断言）；面板使用方仍由 createPanel/bind 触发
+export function renderCoursePanel(): void {
     const content = getCourseContent();
     if (!content) return;
     content.dataset.ready = '1';

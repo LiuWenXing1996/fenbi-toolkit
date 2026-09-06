@@ -18,8 +18,30 @@ export function bindCollapsibles(scope: ParentNode): void {
                     content.style.maxHeight = '0';
                 });
             }
+            // 本区块展开/收起会改变外层内容总高：向上刷新所有已展开父级，避免外层 max-height 固定把新增内容裁掉
+            if (!isCollapsed) {
+                refreshAncestorHeights(content);
+            } else {
+                scheduleAncestorRefresh(content);
+            }
         });
     });
+}
+
+// 向上刷新处于展开状态的父级 .section-content 高度（配合 overflow:hidden，防止内容被裁且滚动条滚不到）
+function refreshAncestorHeights(content: HTMLElement): void {
+    let parent = content.parentElement;
+    while (parent) {
+        if (parent.classList.contains('section-content') && !parent.classList.contains('collapsed')) {
+            parent.style.maxHeight = parent.scrollHeight + 'px';
+        }
+        parent = parent.parentElement;
+    }
+}
+
+// 收起有 0.25s max-height 过渡，等动画结束再让父级收缩
+function scheduleAncestorRefresh(content: HTMLElement): void {
+    setTimeout(() => refreshAncestorHeights(content), 300);
 }
 
 // 让 scope 内所有处于展开状态的折叠区块高度自适应内容
