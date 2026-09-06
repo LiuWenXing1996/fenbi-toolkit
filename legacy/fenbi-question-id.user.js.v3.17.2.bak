@@ -1,0 +1,1553 @@
+// ==UserScript==
+// @name         粉笔综合工具
+// @namespace    http://tampermonkey.net/
+// @version      3.17.2
+// @description  粉笔综合工具面板：题目 ID / 课程信息获取（接口旁路捕获·零新增请求）
+// @author       You
+// @match        *://*.fenbi.com/*
+// @match        *://*.fenbike.cn/*
+// @grant        GM_setClipboard
+// @grant        GM_addStyle
+// @grant        unsafeWindow
+// @run-at       document-start
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    const LOG_PREFIX = '[粉笔综合工具] ';
+    function log(...args) {
+        console.log(LOG_PREFIX, ...args);
+    }
+
+    // ========== 旁路捕获：监听页面自身的 fetch / XHR 响应（只读、不重放、零新增请求） ==========
+    const quizApiCaptures = []; // { url, json, ts }
+
+    function isQuizApiUrl(url) {
+        if (!url || typeof url !== 'string') return false;
+        if (!url.includes('fenbi.com') && !url.includes('fenbike.cn')) return false;
+        return url.includes('/solution') || url.includes('/exercise');
+    }
+
+    function onQuizApiCaptured(url, json) {
+        quizApiCaptures.push({ url: url, json: json, ts: Date.now() });
+        if (quizApiCaptures.length > 50) quizApiCaptures.shift(); // 最多保留最近 50 条
+        log('旁路捕获题目接口响应:', url.substring(0, 90) + '...');
+    }
+
+    // 从已捕获的响应里找最新的、含题目数据的对象
+    function findLatestCapture() {
+        for (let i = quizApiCaptures.length - 1; i >= 0; i--) {
+            const cap = quizApiCaptures[i];
+            const target = cap && findSolutionsDeep(cap.json);
+            if (target && (Array.isArray(target.solutions) || Array.isArray(target.materials))) {
+                return { cap: cap, target: target };
+            }
+        }
+        return null;
+    }
+
+    // ========== 课程信息旁路捕获（detail_for_sale / episode_nodes） ==========
+    const courseByCourseId = {}; // courseId -> { detail, root, groups:{groupId:{data,ts}}, ts }
+    let courseLastId = 0;        // 最近有响应的课程 id
+
+    function isCourseApiUrl(url) {
+        if (!url || typeof url !== 'string') return false;
+        if (!url.includes('fenbi.com') && !url.includes('fenbike.cn')) return false;
+        return url.includes('/detail_for_sale') || url.includes('/episode_nodes');
+    }
+
+    function extractCourseIdFromUrl(url) {
+        const m = String(url).match(/\/lectures\/(\d+)\//);
+        return m ? Number(m[1]) : 0;
+    }
+
+    function extractQueryParam(url, key) {
+        const s = String(url);
+        const qi = s.indexOf('?');
+        if (qi < 0) return null;
+        try {
+            return new URLSearchParams(s.slice(qi + 1)).get(key);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function onCourseApiCaptured(url, json) {
+        const courseId = extractCourseIdFromUrl(url);
+        if (!courseId) {
+            log('课程接口 URL 未包含课程 ID，忽略:', String(url).substring(0, 90));
+            return;
+        }
+        const rec = courseByCourseId[courseId] || (courseByCourseId[courseId] = { detail: null, root: null, groups: {}, ts: 0 });
+        const item = { data: json, ts: Date.now() };
+        if (url.includes('/detail_for_sale')) {
+            rec.detail = item;
+            log('旁路捕获课程详情: courseId=' + courseId);
+        } else if (url.includes('/episode_nodes')) {
+            const gid = extractQueryParam(url, 'episode_set_id');
+            if (gid) {
+                rec.groups[gid] = item;
+                log('旁路捕获分组课时: courseId=' + courseId + ' episode_set_id=' + gid);
+            } else {
+                rec.root = item;
+                log('旁路捕获分组列表: courseId=' + courseId);
+            }
+        }
+        rec.ts = item.ts;
+        courseLastId = courseId;
+        scheduleCourseRefresh();
+    }
+
+    // 只 patch 页面的真实网络对象（sandbox 下须用 unsafeWindow）
+    function installApiCaptureHook() {
+        try {
+            const W = (typeof unsafeWindow !== 'undefined') ? unsafeWindow : window;
+            if (!W || W.__fenbiQuizHookInstalled) return;
+            W.__fenbiQuizHookInstalled = true;
+
+            // ---- 拦截 fetch ----
+            const origFetch = W.fetch;
+            if (typeof origFetch === 'function') {
+                W.fetch = function (...args) {
+                    const p = origFetch.apply(this, args);
+                    try {
+                        let url = '';
+                        const arg0 = args[0];
+                        if (typeof arg0 === 'string') url = arg0;
+                        else if (arg0 && arg0.url) url = arg0.url;
+                        const isQuiz = isQuizApiUrl(url);
+                        const isCourse = isCourseApiUrl(url);
+                        if (isQuiz || isCourse) {
+                            p.then(resp => {
+                                try {
+                                    resp.clone().text().then(txt => {
+                                        try {
+                                            const json = JSON.parse(txt);
+                                            if (!json) return;
+                                            if (isQuiz) onQuizApiCaptured(url, json);
+                                            if (isCourse) onCourseApiCaptured(url, json);
+                                        } catch (e) {}
+                                    }).catch(() => {});
+                                } catch (e) {}
+                            }).catch(() => {});
+                        }
+                    } catch (e) {}
+                    return p;
+                };
+                log('fetch 旁路捕获已安装');
+            }
+
+            // ---- 拦截 XMLHttpRequest ----
+            const origOpen = W.XMLHttpRequest.prototype.open;
+            const origSend = W.XMLHttpRequest.prototype.send;
+            if (typeof origOpen === 'function' && typeof origSend === 'function') {
+                W.XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+                    this.__fenbiApiUrl = url || '';
+                    return origOpen.call(this, method, url, ...rest);
+                };
+                W.XMLHttpRequest.prototype.send = function (...args) {
+                    const url = this.__fenbiApiUrl || '';
+                    const isQuiz = isQuizApiUrl(url);
+                    const isCourse = isCourseApiUrl(url);
+                    if (isQuiz || isCourse) {
+                        this.addEventListener('load', () => {
+                            try {
+                                const txt = this.responseText;
+                                if (txt) {
+                                    const json = JSON.parse(txt);
+                                    if (!json) return;
+                                    if (isQuiz) onQuizApiCaptured(url, json);
+                                    if (isCourse) onCourseApiCaptured(url, json);
+                                }
+                            } catch (e) {}
+                        });
+                    }
+                    return origSend.apply(this, args);
+                };
+                log('XHR 旁路捕获已安装');
+            }
+        } catch (e) {
+            log('安装旁路捕获失败:', e);
+        }
+    }
+
+    installApiCaptureHook();
+
+    // ========== 样式 ==========
+    GM_addStyle(`
+        #fenbi-id-panel {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 360px;
+            max-height: 75vh;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+            z-index: 2147483647;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #fenbi-id-panel.no-transition {
+            transition: none !important;
+        }
+        /* 折叠状态：变成右下角圆形悬浮按钮 */
+        #fenbi-id-panel.collapsed {
+            top: auto;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            max-height: 48px;
+            border-radius: 50%;
+            padding: 0;
+            box-shadow: 0 4px 16px rgba(30,136,229,0.4);
+            background: linear-gradient(135deg, #1e88e5, #1565c0);
+            border: none;
+            cursor: grab;
+            user-select: none;
+            transition: box-shadow 0.2s, transform 0.15s;
+        }
+        #fenbi-id-panel.collapsed:active {
+            cursor: grabbing;
+        }
+        #fenbi-id-panel.collapsed.dragging {
+            transition: none;
+            box-shadow: 0 8px 24px rgba(30,136,229,0.5);
+        }
+        #fenbi-id-panel.collapsed .panel-header {
+            display: none;
+        }
+        #fenbi-id-panel.collapsed .panel-body {
+            display: none;
+        }
+        #fenbi-id-panel.collapsed .collapsed-fab {
+            display: flex;
+        }
+        #fenbi-id-panel .collapsed-fab {
+            display: none;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        #fenbi-id-panel .collapsed-fab .fab-icon {
+            font-size: 20px;
+            color: #fff;
+            line-height: 1;
+            pointer-events: none;
+        }
+        #fenbi-id-panel .panel-header {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            gap: 12px;
+            letter-spacing: 0.3px;
+        }
+        #fenbi-id-panel .panel-header:hover {
+            background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+        }
+        #fenbi-id-panel .panel-header span:first-child {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #fenbi-id-panel .panel-header .toggle-btn {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.18);
+            border-radius: 50%;
+            font-size: 14px;
+            line-height: 1;
+            transition: background 0.2s, transform 0.2s;
+            flex-shrink: 0;
+        }
+        #fenbi-id-panel .panel-header:hover .toggle-btn {
+            background: rgba(255,255,255,0.28);
+            transform: scale(1.1);
+        }
+        #fenbi-id-panel .panel-body {
+            padding: 12px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        #fenbi-id-panel .section-title {
+            font-weight: 600;
+            color: #374151;
+            margin: 10px 0 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #fenbi-id-panel .section-title.collapsible {
+            cursor: pointer;
+            margin-bottom: 6px;
+        }
+        #fenbi-id-panel .section-title.collapsible .section-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #fenbi-id-panel .section-title.collapsible .collapse-arrow {
+            font-size: 10px;
+            color: #9ca3af;
+            transition: transform 0.2s;
+            line-height: 1;
+        }
+        #fenbi-id-panel .section-title.collapsible.collapsed .collapse-arrow {
+            transform: rotate(-90deg);
+        }
+        #fenbi-id-panel .section-title.collapsible:hover {
+            color: #1e88e5;
+        }
+        #fenbi-id-panel .section-title.collapsible:hover .collapse-arrow {
+            color: #1e88e5;
+        }
+        #fenbi-id-panel .section-content {
+            transition: max-height 0.25s ease, opacity 0.2s ease;
+            overflow: hidden;
+        }
+        #fenbi-id-panel .section-content.collapsed {
+            max-height: 0 !important;
+            opacity: 0;
+            margin: 0;
+        }
+        #fenbi-id-panel .section-title:first-child {
+            margin-top: 0;
+        }
+        #fenbi-id-panel .copy-btn {
+            background: #1e88e5;
+            color: #fff;
+            border: none;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #fenbi-id-panel .copy-btn:hover {
+            background: #1565c0;
+        }
+        #fenbi-id-panel .copy-btn.copied {
+            background: #10b981;
+        }
+        #fenbi-id-panel .scan-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+            transition: transform 0.1s;
+        }
+        #fenbi-id-panel .scan-btn:hover {
+            transform: translateY(-1px);
+        }
+        #fenbi-id-panel .scan-btn:active {
+            transform: translateY(0);
+        }
+        #fenbi-id-panel .scan-btn.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        #fenbi-id-panel .prompt-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: #fff;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 6px;
+            transition: transform 0.1s;
+        }
+        #fenbi-id-panel .prompt-btn:hover {
+            transform: translateY(-1px);
+        }
+        #fenbi-id-panel .prompt-btn:active {
+            transform: translateY(0);
+        }
+        #fenbi-id-panel .copy-format-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        #fenbi-id-panel .copy-format-group .copy-btn {
+            padding: 3px 8px;
+            font-size: 11px;
+        }
+        #fenbi-id-panel .id-item {
+            padding: 6px 8px;
+            margin: 3px 0;
+            background: #f9fafb;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        #fenbi-id-panel .id-item:hover {
+            background: #f3f4f6;
+        }
+        #fenbi-id-panel .id-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            line-height: 1.6;
+        }
+        #fenbi-id-panel .id-num {
+            color: #1e88e5;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+        #fenbi-id-panel .id-global {
+            color: #6b7280;
+            font-size: 11px;
+        }
+        #fenbi-id-panel .kp-tag {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            margin-left: 4px;
+            vertical-align: middle;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        #fenbi-id-panel .kp-tag:hover {
+            background: #bae6fd;
+        }
+        #fenbi-id-panel .material-tag {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            margin-left: 4px;
+            vertical-align: middle;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        #fenbi-id-panel .material-questions {
+            margin-top: 4px;
+            padding: 6px 8px;
+            background: #fffbeb;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #78350f;
+        }
+        #fenbi-id-panel .material-questions .mq-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        #fenbi-id-panel .material-questions .mq-title .mq-arrow {
+            font-size: 9px;
+            color: #b45309;
+            transition: transform 0.2s;
+        }
+        #fenbi-id-panel .material-questions.collapsed .mq-arrow {
+            transform: rotate(-90deg);
+        }
+        #fenbi-id-panel .material-questions .mq-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin-top: 4px;
+        }
+        #fenbi-id-panel .material-questions.collapsed .mq-list {
+            display: none;
+        }
+        #fenbi-id-panel .material-questions .mq-item {
+            background: #fef3c7;
+            padding: 1px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        #fenbi-id-panel .material-questions .mq-item:hover {
+            background: #fde68a;
+        }
+        #fenbi-id-panel .material-questions .mq-item.copied {
+            background: #86efac;
+            color: #064e3b;
+        }
+        #fenbi-id-panel .item-copy-btn {
+            background: #e5e7eb;
+            color: #374151;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        #fenbi-id-panel .item-copy-btn:hover {
+            background: #d1d5db;
+        }
+        #fenbi-id-panel .empty-tip {
+            color: #6b7280;
+            text-align: center;
+            padding: 20px 0;
+            line-height: 1.6;
+        }
+        #fenbi-id-panel .stats {
+            color: #6b7280;
+            font-size: 12px;
+            margin-left: 8px;
+            font-weight: normal;
+        }
+        #fenbi-id-panel .error-tip {
+            background: #fef2f2;
+            color: #b91c1c;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+    `);
+
+    // ========== 数据存储 ==========
+    let currentData = {
+        name: '',
+        materials: [],
+        solutions: []
+    };
+    let lastSource = ''; // '' | 'capture'（旁路捕获）| 'memory'（内存扫描）
+
+    // ========== 面板创建 ==========
+    function createPanel() {
+        log('创建面板');
+        const panel = document.createElement('div');
+        panel.id = 'fenbi-id-panel';
+        panel.className = 'collapsed'; // 默认收起
+        panel.innerHTML = `
+            <div class="collapsed-fab" id="fenbi-collapsed-fab">
+                <span class="fab-icon">📋</span>
+            </div>
+            <div class="panel-header">
+                <span>📋 粉笔综合面板</span>
+                <span class="toggle-btn">—</span>
+            </div>
+            <div class="panel-body">
+                <div class="section-title collapsible" data-section="quiz-id" data-top="1">
+                    <div class="section-left">
+                        <span class="collapse-arrow">▼</span>
+                        <span>获取题目 ID</span>
+                    </div>
+                </div>
+                <div class="section-content" data-content="quiz-id">
+                    <div class="empty-tip">
+                        点击下方按钮获取当前页面的题目 ID
+                    </div>
+                    <button class="scan-btn" id="fenbi-scan-btn">🔍 获取题目 ID</button>
+                </div>
+                <div class="section-title collapsible" data-section="course-info" data-top="1">
+                    <div class="section-left">
+                        <span class="collapse-arrow">▼</span>
+                        <span>获取课程信息</span>
+                    </div>
+                </div>
+                <div class="section-content" data-content="course-info">
+                    <div class="empty-tip">
+                        读取页面已触发的课程接口响应（脚本不主动发请求）<br>
+                        <span style="font-size:11px;color:#9ca3af;">请先在课程页面打开目录并逐组点开，以触发接口请求</span>
+                    </div>
+                    <button class="scan-btn" id="fenbi-course-btn">🔍 获取课程信息</button>
+                </div>
+            </div>
+        `;
+        document.documentElement.appendChild(panel);
+        log('面板已添加到页面');
+
+        // 记录圆球拖拽后的位置
+        let savedFabPos = null; // { left, top }
+
+        // 折叠：点击整个 header 区域
+        panel.querySelector('.panel-header').addEventListener('click', () => {
+            panel.classList.add('collapsed');
+            // 收起后恢复圆球位置（如果有拖拽记录）
+            if (savedFabPos) {
+                requestAnimationFrame(() => {
+                    panel.style.left = savedFabPos.left + 'px';
+                    panel.style.top = savedFabPos.top + 'px';
+                    panel.style.right = 'auto';
+                    panel.style.bottom = 'auto';
+                });
+            }
+        });
+
+        // ========== 圆形按钮拖拽 + 点击展开 ==========
+        const fab = panel.querySelector('.collapsed-fab');
+        let isDragging = false;
+        let dragMoved = false;
+        let startX = 0, startY = 0;
+        let startLeft = 0, startTop = 0;
+
+        function onDragStart(e) {
+            isDragging = true;
+            dragMoved = false;
+            const touch = e.touches ? e.touches[0] : e;
+            startX = touch.clientX;
+            startY = touch.clientY;
+
+            // 获取当前位置（折叠态时 bottom/right 定位，转成 left/top）
+            const rect = panel.getBoundingClientRect();
+            startLeft = rect.left;
+            startTop = rect.top;
+
+            // 拖拽时切到 left/top 定位，禁用过渡
+            panel.classList.add('dragging');
+            panel.style.left = startLeft + 'px';
+            panel.style.top = startTop + 'px';
+            panel.style.right = 'auto';
+            panel.style.bottom = 'auto';
+
+            document.addEventListener('mousemove', onDragMove);
+            document.addEventListener('mouseup', onDragEnd);
+            document.addEventListener('touchmove', onDragMove, { passive: false });
+            document.addEventListener('touchend', onDragEnd);
+        }
+
+        function onDragMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const touch = e.touches ? e.touches[0] : e;
+            const dx = touch.clientX - startX;
+            const dy = touch.clientY - startY;
+
+            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+                dragMoved = true;
+            }
+
+            let newLeft = startLeft + dx;
+            let newTop = startTop + dy;
+
+            // 边界限制：圆球 56px
+            const fabSize = 48;
+            const maxLeft = window.innerWidth - fabSize;
+            const maxTop = window.innerHeight - fabSize;
+            newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+            newTop = Math.max(0, Math.min(maxTop, newTop));
+
+            panel.style.left = newLeft + 'px';
+            panel.style.top = newTop + 'px';
+        }
+
+        function onDragEnd() {
+            isDragging = false;
+            panel.classList.remove('dragging');
+
+            document.removeEventListener('mousemove', onDragMove);
+            document.removeEventListener('mouseup', onDragEnd);
+            document.removeEventListener('touchmove', onDragMove);
+            document.removeEventListener('touchend', onDragEnd);
+
+            if (dragMoved) {
+                // 拖拽过：记录位置
+                const rect = panel.getBoundingClientRect();
+                savedFabPos = { left: rect.left, top: rect.top };
+            } else {
+                // 没移动，算点击 → 展开面板
+                expandPanel();
+            }
+        }
+
+        function expandPanel() {
+            // 先禁用过渡，瞬移到右上角位置
+            panel.classList.add('no-transition');
+            panel.style.left = '';
+            panel.style.top = '';
+            panel.style.right = '';
+            panel.style.bottom = '';
+            panel.classList.remove('collapsed');
+
+            // 下一帧再恢复过渡（避免展开过程有动画）
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    panel.classList.remove('no-transition');
+                });
+            });
+        }
+
+        fab.addEventListener('mousedown', onDragStart);
+        fab.addEventListener('touchstart', onDragStart, { passive: true });
+
+        // 绑定顶层折叠面板（获取题目 ID / 获取课程信息）
+        bindCollapsibles(panel);
+
+        // 扫描按钮（题目 / 课程）
+        bindScanButton(panel);
+        bindCourseButton(panel);
+    }
+
+    function bindScanButton(container) {
+        const btn = container.querySelector('#fenbi-scan-btn');
+        if (!btn) {
+            log('错误: 找不到扫描按钮');
+            return;
+        }
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            log('点击了获取按钮');
+            btn.classList.add('loading');
+            btn.textContent = '⏳ 获取中...';
+            scanPageForData().finally(() => {
+                btn.classList.remove('loading');
+                // 按钮文字会在 renderPanel 中重置
+            });
+        });
+        log('扫描按钮事件已绑定');
+    }
+
+    // ========== 折叠面板通用逻辑 ==========
+    // 将 scope 内 .section-title.collapsible 与其 [data-content] 区块绑定折叠/展开
+    function bindCollapsibles(scope) {
+        scope.querySelectorAll('.section-title.collapsible').forEach(title => {
+            title.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const section = title.dataset.section;
+                const content = scope.querySelector(`[data-content="${section}"]`);
+                if (!content) return;
+                const isCollapsed = title.classList.toggle('collapsed');
+                content.classList.toggle('collapsed', isCollapsed);
+                if (!isCollapsed) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    requestAnimationFrame(() => {
+                        content.style.maxHeight = '0';
+                    });
+                }
+            });
+        });
+    }
+
+    // 让 scope 内所有处于展开状态的折叠区块高度自适应内容
+    function refreshSectionHeights(scope) {
+        scope.querySelectorAll('.section-content').forEach(content => {
+            if (!content.classList.contains('collapsed')) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        });
+    }
+
+    // ========== 渲染“获取题目 ID”折叠面板内容 ==========
+    function renderPanel() {
+        const panel = document.getElementById('fenbi-id-panel');
+        if (!panel) return;
+
+        // 只更新“获取题目 ID”区块内部，保留“获取课程信息”等顶层折叠面板
+        const body = panel.querySelector('[data-content="quiz-id"]');
+        if (!body) return;
+        const { name, materials, solutions } = currentData;
+
+
+        if (solutions.length === 0 && materials.length === 0) {
+            body.innerHTML = `
+                <div class="empty-tip">
+                    未找到题目数据<br>
+                    <span style="font-size:11px;color:#9ca3af;">请在页面中手动触发一次题目接口请求<br>（打开/刷新练习页、切换题目均可），脚本不主动发请求</span>
+                </div>
+                <button class="scan-btn" id="fenbi-scan-btn">🔍 重新获取</button>
+            `;
+            bindScanButton(body);
+            requestAnimationFrame(() => {
+                if (!body.classList.contains('collapsed')) {
+                    body.style.maxHeight = body.scrollHeight + 'px';
+                }
+            });
+            return;
+        }
+
+        let html = '';
+
+        if (lastSource) {
+            const tipText = lastSource === 'capture'
+                ? '✓ 数据来自接口旁路捕获（未发起任何新请求）'
+                : '✓ 数据来自页面内存扫描';
+            html += `<div style="margin-bottom:8px;padding:6px 8px;background:#ecfdf5;border-radius:4px;color:#047857;font-size:11px;">
+                ${tipText}
+            </div>`;
+        }
+
+        if (name) {
+            html += `<div style="margin-bottom:10px;padding:8px;background:#eff6ff;border-radius:4px;color:#1e40af;font-weight:500;">
+                📚 ${escapeHtml(name)}
+            </div>`;
+        }
+
+        html += `<button class="scan-btn" id="fenbi-scan-btn">🔄 重新获取</button>`;
+        html += `<button class="prompt-btn" id="fenbi-prompt-btn">✨ 生成粉笔AI提示词</button>`;
+
+        html += `
+            <div class="section-title collapsible" data-section="solutions">
+                <div class="section-left">
+                    <span class="collapse-arrow">▼</span>
+                    <span>题目 ID <span class="stats">(${solutions.length}题)</span></span>
+                </div>
+            </div>
+            <div class="section-content" data-content="solutions">
+                <div class="copy-format-group">
+                    <button class="copy-btn" data-copy="solution-ids" data-fmt="comma">逗号</button>
+                    <button class="copy-btn" data-copy="solution-ids" data-fmt="newline">换行</button>
+                    <button class="copy-btn" data-copy="solution-ids" data-fmt="space">空格</button>
+                    <button class="copy-btn" data-copy="solution-ids" data-fmt="js">JS 数组</button>
+                    <button class="copy-btn" data-copy="solution-ids" data-fmt="globalId">globalId</button>
+                    <button class="copy-btn" data-copy="solution-ids" data-fmt="twoCol">两列</button>
+                    <button class="copy-btn" data-copy="solution-ids" data-fmt="withKp">ID+知识点</button>
+                </div>
+        `;
+        solutions.forEach((q, idx) => {
+            const materialTags = q.materialIds && q.materialIds.length > 0
+                ? q.materialIds.map(id => `<span class="material-tag" title="材料 ID: ${id}">📄${id}</span>`).join('')
+                : '';
+            const kpTags = q.keypoints && q.keypoints.length > 0
+                ? q.keypoints.map(k => `<span class="kp-tag" title="知识点ID: ${escapeHtml(k.id)}">${escapeHtml(k.name)}</span>`).join('')
+                : '';
+            html += `
+                <div class="id-item">
+                    <div class="id-info" title="${escapeHtml(q.contentText || '')}">
+                        <span class="id-num">${idx + 1}.</span>
+                        <span>${q.id}</span>
+                        <span class="id-global">(${q.globalId})</span>
+                        ${materialTags}
+                        ${kpTags}
+                    </div>
+                    <button class="item-copy-btn" data-copy-id="${q.id}">复制</button>
+                </div>
+            `;
+        });
+        html += `</div>`;
+
+        if (materials.length > 0) {
+            html += `
+                <div class="section-title collapsible" data-section="materials">
+                    <div class="section-left">
+                        <span class="collapse-arrow">▼</span>
+                        <span>材料 ID <span class="stats">(${materials.length}篇)</span></span>
+                    </div>
+                </div>
+                <div class="section-content" data-content="materials">
+                    <div class="copy-format-group">
+                        <button class="copy-btn" data-copy="material-ids" data-fmt="comma">逗号</button>
+                        <button class="copy-btn" data-copy="material-ids" data-fmt="newline">换行</button>
+                        <button class="copy-btn" data-copy="material-ids" data-fmt="space">空格</button>
+                        <button class="copy-btn" data-copy="material-ids" data-fmt="js">JS 数组</button>
+                        <button class="copy-btn" data-copy="material-ids" data-fmt="globalId">globalId</button>
+                    </div>
+            `;
+            materials.forEach((m, idx) => {
+                const qCount = m.questionIds ? m.questionIds.length : 0;
+                const qListHtml = qCount > 0
+                    ? `<div class="material-questions collapsed" data-mq="${m.globalId}">
+                        <div class="mq-title">
+                            <span>📝 包含 ${qCount} 道题</span>
+                            <span class="mq-arrow">▼</span>
+                        </div>
+                        <div class="mq-list">
+                            ${m.questionIds.map(qid => `<span class="mq-item" data-copy-id="${qid}">${qid}</span>`).join('')}
+                        </div>
+                    </div>`
+                    : '';
+                html += `
+                    <div class="id-item">
+                        <div class="id-info" title="${escapeHtml(m.contentText || '')}">
+                            <span class="id-num">${idx + 1}.</span>
+                            <span>${m.id}</span>
+                            <span class="id-global">(${m.globalId})</span>
+                        </div>
+                        <button class="item-copy-btn" data-copy-id="${m.id}">复制</button>
+                    </div>
+                    ${qListHtml}
+                `;
+            });
+            html += `</div>`;
+        }
+
+        html += `
+            <div class="section-title">
+                <span>数据导出</span>
+                <button class="copy-btn" data-copy="full-json">复制 JSON</button>
+            </div>
+        `;
+
+        body.innerHTML = html;
+
+        bindScanButton(body);
+
+        // 生成粉笔AI提示词按钮
+        const promptBtn = body.querySelector('#fenbi-prompt-btn');
+        if (promptBtn) {
+            promptBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                let prompt = '';
+
+                if (materials.length > 0) {
+                    // 有材料：按材料组织提示词
+                    const allQids = solutions.map(q => q.id).join(',');
+                    const allMids = materials.map(m => m.id).join(',');
+                    let materialParts = materials.map(m => {
+                        const qids = m.questionIds && m.questionIds.length > 0
+                            ? m.questionIds.join(',')
+                            : '无';
+                        return `材料${m.id}包含题目：${qids}`;
+                    }).join('\n');
+
+                    prompt = `这是一些题目 ID 和材料 ID：
+全部题目 ID：${allQids}
+全部材料 ID：${allMids}
+
+材料与题目的对应关系：
+${materialParts}
+
+根据以上题目 ID 和材料 ID 生成一次练习，要乱序版的，材料对应的题目要保持关联关系`;
+                } else {
+                    // 无材料：用简单格式
+                    const ids = solutions.map(q => q.id).join(',');
+                    prompt = `这是一些题目 ID，${ids}，根据以上题目 ID 生成一次练习，要乱序版的`;
+                }
+
+                copyToClipboard(prompt, promptBtn);
+            });
+        }
+
+        // 批量复制按钮
+        body.querySelectorAll('[data-copy]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const type = btn.dataset.copy;
+                const fmt = btn.dataset.fmt || 'comma';
+                let text = '';
+
+                const items = type === 'solution-ids' ? solutions : (type === 'material-ids' ? materials : null);
+
+                if (items) {
+                    if (fmt === 'globalId') {
+                        text = items.map(item => item.globalId).join(',');
+                    } else if (fmt === 'newline') {
+                        text = items.map(item => item.id).join('\n');
+                    } else if (fmt === 'space') {
+                        text = items.map(item => item.id).join(' ');
+                    } else if (fmt === 'js') {
+                        text = JSON.stringify(items.map(item => item.id), null, 2);
+                    } else if (fmt === 'twoCol') {
+                        text = items.map(item => {
+                            const matIds = item.materialIds && item.materialIds.length > 0
+                                ? item.materialIds.join(',')
+                                : '';
+                            return `${item.id}\t${matIds}`;
+                        }).join('\n');
+                    } else if (fmt === 'withKp') {
+                        // 格式：题目ID + Tab + 知识点名称（顿号分隔）
+                        text = items.map(item => {
+                            const kpNames = item.keypoints && item.keypoints.length > 0
+                                ? item.keypoints.map(k => k.name).join('、')
+                                : '';
+                            return `${item.id}\t${kpNames}`;
+                        }).join('\n');
+                    } else {
+                        text = items.map(item => item.id).join(',');
+                    }
+                } else if (type === 'full-json') {
+                    text = JSON.stringify(currentData, null, 2);
+                }
+
+                copyToClipboard(text, btn);
+            });
+        });
+
+        // 单条复制按钮
+        body.querySelectorAll('.item-copy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyToClipboard(btn.dataset.copyId, btn);
+            });
+        });
+
+        // 折叠/展开区块
+        body.querySelectorAll('.section-title.collapsible').forEach(title => {
+            title.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const section = title.dataset.section;
+                const content = body.querySelector(`[data-content="${section}"]`);
+                if (!content) return;
+
+                const isCollapsed = title.classList.toggle('collapsed');
+                content.classList.toggle('collapsed', isCollapsed);
+
+                // 设置 max-height 实现平滑动画
+                if (!isCollapsed) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    // 触发重绘后设为0
+                    requestAnimationFrame(() => {
+                        content.style.maxHeight = '0';
+                    });
+                }
+            });
+        });
+
+        // 初始化：设置展开状态的 max-height
+        requestAnimationFrame(() => {
+            body.querySelectorAll('.section-content').forEach(content => {
+                if (!content.classList.contains('collapsed')) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+        });
+
+        // 材料内题目列表的折叠/展开
+        body.querySelectorAll('.material-questions .mq-title').forEach(title => {
+            title.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const container = title.closest('.material-questions');
+                if (!container) return;
+                container.classList.toggle('collapsed');
+            });
+        });
+
+        // 材料内题目ID点击复制
+        body.querySelectorAll('.mq-item[data-copy-id]').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyToClipboard(item.dataset.copyId, item);
+            });
+        });
+    }
+
+    // ========== 复制功能 ==========
+    function copyToClipboard(text, btn) {
+        try {
+            GM_setClipboard(text);
+        } catch (e) {
+            navigator.clipboard.writeText(text).catch(() => {});
+        }
+        if (btn) {
+            const originalText = btn.textContent;
+            btn.textContent = '✓ 已复制';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('copied');
+            }, 1500);
+        }
+    }
+
+    // ========== 工具函数 ==========
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str == null ? '' : String(str);
+        return div.innerHTML;
+    }
+
+    function stripHtml(html) {
+        const div = document.createElement('div');
+        div.innerHTML = html || '';
+        return div.textContent || div.innerText || '';
+    }
+
+    // 解析知识点列表：keypoints 形如 [{id, name}, ...]，部分接口/题目可能缺失
+    function parseKeypoints(kp) {
+        if (!Array.isArray(kp)) return [];
+        return kp
+            .filter(k => k && typeof k === 'object' && (k.id != null || k.name))
+            .map(k => ({ id: k.id != null ? k.id : '', name: k.name || '' }));
+    }
+
+    // ========== 解析API数据 ==========
+    function parseApiData(data) {
+        const result = {
+            name: data.name || '',
+            materials: [],
+            solutions: []
+        };
+
+        if (Array.isArray(data.materials)) {
+            result.materials = data.materials.map(m => ({
+                id: m.id,
+                globalId: m.globalId,
+                tikuPrefix: m.tikuPrefix,
+                contentText: stripHtml(m.content || '').substring(0, 50)
+            }));
+        }
+
+        if (Array.isArray(data.solutions)) {
+            result.solutions = data.solutions.map(s => ({
+                id: s.id,
+                globalId: s.globalId,
+                tikuPrefix: s.tikuPrefix,
+                type: s.type,
+                contentText: stripHtml(s.content || '').substring(0, 60),
+                source: s.source || '',
+                correctAnswer: s.correctAnswer,
+                keypoints: parseKeypoints(s.keypoints)
+            }));
+        } else if (Array.isArray(data.questions)) {
+            // exercise 接口：字段叫 questions
+            result.solutions = data.questions.map(q => ({
+                id: q.id,
+                globalId: q.globalId,
+                tikuPrefix: q.tikuPrefix,
+                type: q.type,
+                contentText: stripHtml(q.content || '').substring(0, 60),
+                source: q.source || '',
+                correctAnswer: q.correctAnswer,
+                keypoints: parseKeypoints(q.keypoints)
+            }));
+        }
+
+        // 解析 card 字段，建立材料-题目关联
+        const materialQMap = {}; // materialGlobalId -> [questionGlobalId]
+        const questionMaterialMap = {}; // questionGlobalId -> [materialGlobalId]
+        if (data.card && data.card.children) {
+            function walkNodes(nodes) {
+                if (!Array.isArray(nodes)) return;
+                nodes.forEach(node => {
+                    if (node.nodeType === 2 && node.key && Array.isArray(node.materialKeys)) {
+                        // 叶子节点：一道题
+                        const qGlobalId = node.key;
+                        questionMaterialMap[qGlobalId] = node.materialKeys.slice();
+                        node.materialKeys.forEach(mKey => {
+                            if (!materialQMap[mKey]) materialQMap[mKey] = [];
+                            materialQMap[mKey].push(qGlobalId);
+                        });
+                    }
+                    if (node.children) walkNodes(node.children);
+                });
+            }
+            walkNodes(data.card.children);
+        }
+
+        // 把关联关系写入 materials 和 solutions
+        result.materials.forEach(m => {
+            const qIds = materialQMap[m.globalId] || [];
+            m.questionGlobalIds = qIds;
+            m.questionIds = qIds.map(gId => {
+                const q = result.solutions.find(s => s.globalId === gId);
+                return q ? q.id : null;
+            }).filter(Boolean);
+        });
+
+        result.solutions.forEach(s => {
+            s.materialGlobalIds = questionMaterialMap[s.globalId] || [];
+            s.materialIds = s.materialGlobalIds.map(gId => {
+                const m = result.materials.find(m => m.globalId === gId);
+                return m ? m.id : null;
+            }).filter(Boolean);
+        });
+
+        return result;
+    }
+
+    // ========== 递归查找 solutions（带循环引用保护） ==========
+    function findSolutionsDeep(obj, maxDepth) {
+        maxDepth = maxDepth || 6;
+        const visited = new WeakSet();
+        let count = 0;
+        const maxCount = 5000; // 最多扫描5000个对象，防止卡死
+
+        function search(obj, depth) {
+            count++;
+            if (count > maxCount) return null;
+            if (depth > maxDepth) return null;
+            if (!obj || typeof obj !== 'object') return null;
+            if (visited.has(obj)) return null;
+            visited.add(obj);
+
+            try {
+                if (Array.isArray(obj.solutions) || Array.isArray(obj.questions) || Array.isArray(obj.materials)) {
+                    return obj;
+                }
+            } catch (e) {}
+
+            for (const key in obj) {
+                if (!obj.hasOwnProperty(key)) continue;
+                const val = obj[key];
+                if (val && typeof val === 'object') {
+                    const found = search(val, depth + 1);
+                    if (found) return found;
+                }
+            }
+            return null;
+        }
+
+        return search(obj, 0);
+    }
+
+    // ========== 手动获取主函数（零新增请求：旁路捕获优先，内存扫描兜底） ==========
+    function scanPageForData() {
+        return new Promise((resolve) => {
+            log('开始获取（旁路捕获优先，脚本不发请求）...');
+            let found = false;
+
+            // === 方式1: 读取旁路捕获的接口响应 ===
+            const hit = findLatestCapture();
+            if (hit) {
+                log('从旁路捕获中读取到数据');
+                currentData = parseApiData(hit.target);
+                lastSource = 'capture';
+                log('旁路捕获成功，题目数:', currentData.solutions.length);
+                renderPanel();
+                found = true;
+                resolve();
+                return;
+            }
+
+            // === 方式2: 用 unsafeWindow 扫描页面全局变量（读取内存已有数据） ===
+            log('方式2: 快速扫描页面全局变量');
+            const scanStartTime = Date.now();
+            const SCAN_TIMEOUT = 1500; // 最多扫1.5秒
+
+            try {
+                const win = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
+                const keys = Object.keys(win);
+                log('全局变量数量:', keys.length);
+
+                // 先按关键词优先级排序：含 solution/quiz/question/tiku/material 的优先
+                const priorityKeywords = ['solution', 'quiz', 'question', 'tiku', 'material', 'paper', 'exam', 'practice'];
+                const sortedKeys = keys.slice().sort((a, b) => {
+                    const aLow = a.toLowerCase();
+                    const bLow = b.toLowerCase();
+                    const aScore = priorityKeywords.some(kw => aLow.includes(kw)) ? 1 : 0;
+                    const bScore = priorityKeywords.some(kw => bLow.includes(kw)) ? 1 : 0;
+                    return bScore - aScore;
+                });
+
+                let scanned = 0;
+                for (let i = 0; i < sortedKeys.length; i++) {
+                    // 超时保护
+                    if (Date.now() - scanStartTime > SCAN_TIMEOUT) {
+                        log('扫描超时，已扫描', scanned, '个变量，跳过剩余');
+                        break;
+                    }
+
+                    const key = sortedKeys[i];
+                    if (key === 'window' || key === 'top' || key === 'parent' || key === 'self') continue;
+                    if (key.startsWith('__') && key.endsWith('__')) continue; // 跳过内部变量
+
+                    try {
+                        const val = win[key];
+                        if (val && typeof val === 'object' && val !== win) {
+                            scanned++;
+                            const r = findSolutionsDeep(val, 5); // 限制深度为5
+                            if (r) {
+                                log('在全局变量', key, '中找到数据');
+                                const parsed = parseApiData(r);
+                                if (parsed.solutions.length > 0 || parsed.materials.length > 0) {
+                                    currentData = parsed;
+                                    lastSource = 'memory';
+                                    log('内存扫描成功，题目数:', parsed.solutions.length);
+                                    renderPanel();
+                                    found = true;
+                                    resolve();
+                                    return;
+                                }
+                            }
+                        }
+                    } catch (e) {}
+                }
+                log('内存扫描完成，扫描了', scanned, '个对象，未找到题目数据（用时', Date.now() - scanStartTime, 'ms）');
+            } catch (e) {
+                log('内存扫描出错:', e);
+            }
+
+            // === 兜底: 无可读数据（脚本不再发起任何接口请求） ===
+            if (!found) {
+                log('未找到题目数据：请在页面手动触发一次题目接口请求后再试');
+                renderPanel();
+            }
+            resolve();
+        });
+    }
+
+    // ========== 课程信息：组装 / 渲染 / 导出（数据全部来自旁路捕获，零新增请求） ==========
+    function getCourseContent() {
+        const panel = document.getElementById('fenbi-id-panel');
+        return panel ? panel.querySelector('[data-content="course-info"]') : null;
+    }
+
+    function bindCourseButton(container) {
+        const btn = container.querySelector('#fenbi-course-btn');
+        if (!btn) return;
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            renderCoursePanel();
+        });
+    }
+
+    // duration 单位为秒
+    function formatDuration(sec) {
+        const s = Number(sec) || 0;
+        const m = Math.round(s / 60);
+        if (m < 1) return '<1分钟';
+        const h = Math.floor(m / 60);
+        const mm = m % 60;
+        if (h === 0) return m + '分钟';
+        if (mm === 0) return h + '小时';
+        return h + '小时' + mm + '分钟';
+    }
+
+    function formatStartTime(ms) {
+        if (!ms) return '';
+        const d = new Date(Number(ms));
+        if (isNaN(d.getTime())) return '';
+        const p = n => (n < 10 ? '0' + n : '' + n);
+        return (d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+    }
+
+    function buildCourseView() {
+        const rec = courseByCourseId[courseLastId];
+        if (!rec) return null;
+        const view = { courseId: courseLastId, name: '', noRoot: false, groups: [], totalEpisodes: 0, totalSeconds: 0 };
+        const detailData = rec.detail && rec.detail.data && rec.detail.data.data;
+        if (detailData && detailData.title) {
+            view.name = detailData.title;
+        }
+        const rootData = rec.root && rec.root.data && rec.root.data.data;
+        if (!rootData || !Array.isArray(rootData.episodeNodes)) {
+            view.noRoot = true;
+            return view;
+        }
+        rootData.episodeNodes.forEach(node => {
+            if (!node || node.nodeType !== 1 || !node.payload) return;
+            const g = node.payload;
+            const group = { id: g.id, title: g.title || ('分组 ' + g.id), episodeCount: g.episodeCount || 0, episodes: [], missing: false, seconds: 0 };
+            const gRec = rec.groups[String(g.id)];
+            const nodes = gRec && gRec.data && gRec.data.data && Array.isArray(gRec.data.data.episodeNodes)
+                ? gRec.data.data.episodeNodes
+                : null;
+            if (!nodes) {
+                group.missing = true;
+            } else {
+                nodes.forEach(n => {
+                    if (!n || n.nodeType !== 6 || !n.payload) return;
+                    const p = n.payload;
+                    group.episodes.push({ id: p.id, title: p.title || '', duration: p.duration || 0, startTime: p.startTime || 0 });
+                    group.seconds += (p.duration || 0);
+                });
+            }
+            view.groups.push(group);
+            view.totalEpisodes += group.episodes.length;
+            view.totalSeconds += group.seconds;
+        });
+        return view;
+    }
+
+    function viewToExport(v) {
+        return {
+            courseId: v.courseId,
+            name: v.name,
+            groupsLoaded: !v.noRoot,
+            totalGroups: v.groups.length,
+            totalEpisodes: v.totalEpisodes,
+            totalDurationSeconds: v.totalSeconds,
+            groups: v.groups.map(g => ({
+                id: g.id,
+                title: g.title,
+                episodeCount: g.episodeCount,
+                episodesLoaded: !g.missing,
+                episodes: g.episodes.map(ep => ({
+                    id: ep.id,
+                    title: ep.title,
+                    durationSeconds: ep.duration,
+                    startTime: ep.startTime
+                }))
+            }))
+        };
+    }
+
+    function viewToText(v) {
+        const lines = [];
+        lines.push('课程：' + (v.name || ('ID ' + v.courseId)) + (v.noRoot ? '（分组列表未捕获）' : ''));
+        if (!v.noRoot) {
+            v.groups.forEach(g => {
+                if (g.missing) {
+                    lines.push('├─ ' + g.title + '（' + (g.episodeCount || '?') + '课时，未加载：请手动触发下接口请求）');
+                } else {
+                    lines.push('├─ ' + g.title + '（' + g.episodes.length + '课时 · ' + formatDuration(g.seconds) + '）');
+                    g.episodes.forEach((ep, j) => {
+                        lines.push('│   ' + (j + 1) + '. ' + ep.title + '（' + formatDuration(ep.duration)
+                            + (ep.startTime ? ' · ' + formatStartTime(ep.startTime) : '') + '）');
+                    });
+                }
+            });
+        }
+        return lines.join('\n');
+    }
+
+    // 单个分组的课程标题列表（复制用，每行一个标题）
+    function groupToText(g) {
+        return g.episodes.map(ep => ep.title).join('\n');
+    }
+
+    function renderCoursePanel() {
+        const content = getCourseContent();
+        if (!content) return;
+        content.dataset.ready = '1';
+        const view = buildCourseView();
+        let html = '';
+
+        if (!view) {
+            html = `
+                <div class="empty-tip">
+                    尚未捕获到课程接口响应<br>
+                    <span style="font-size:11px;color:#9ca3af;">请先在页面打开课程目录/详情页，触发 detail_for_sale 或 episode_nodes 请求；脚本不主动发请求</span>
+                </div>
+                <button class="scan-btn" id="fenbi-course-btn">🔄 重新获取</button>
+            `;
+        } else {
+            const headText = view.name ? ('📚 ' + escapeHtml(view.name)) : ('课程 ID：' + view.courseId + '（详情接口尚未捕获）');
+            html += `<div style="margin-bottom:10px;padding:8px;background:#eff6ff;border-radius:4px;color:#1e40af;font-weight:500;">${headText}</div>`;
+            if (!view.noRoot) {
+                html += `<div style="margin-bottom:8px;color:#6b7280;font-size:11px;">共 ${view.groups.length} 个分组 · ${view.totalEpisodes} 课时 · 总时长 ${formatDuration(view.totalSeconds)}</div>`;
+            }
+            html += `<button class="scan-btn" id="fenbi-course-btn">🔄 重新获取</button>`;
+
+            if (view.noRoot) {
+                html += `<div class="error-tip" style="margin-top:8px;">已捕获课时接口但缺少分组列表：请在页面展开课程目录，触发一次分组列表请求</div>`;
+            } else {
+                view.groups.forEach((g, i) => {
+                    const seg = 'cg' + i;
+                    const stat = g.missing ? '课时未加载'
+                        : (g.episodes.length + '课时 · ' + formatDuration(g.seconds));
+                    const hasEpisodes = !g.missing && g.episodes.length > 0;
+                    html += `
+                        <div class="section-title collapsible collapsed" data-section="${seg}">
+                            <div class="section-left">
+                                <span class="collapse-arrow">▼</span>
+                                <span title="${escapeHtml(g.title)}">${escapeHtml(g.title)}</span>
+                                <span class="stats">(${stat})</span>
+                            </div>
+                            ${hasEpisodes ? `<button class="copy-btn" data-group-copy="${i}" title="复制该组课程列表">复制</button>` : ''}
+                        </div>
+                        <div class="section-content collapsed" data-content="${seg}">`;
+                    if (g.missing) {
+                        html += `<div class="empty-tip" style="padding:8px 0;">请手动触发下接口请求</div>`;
+                    } else if (g.episodes.length === 0) {
+                        html += `<div class="empty-tip" style="padding:8px 0;">该组暂无课时</div>`;
+                    } else {
+                        g.episodes.forEach((ep, j) => {
+                            html += `
+                                <div class="id-item">
+                                    <div class="id-info">
+                                        <span class="id-num">${j + 1}.</span>
+                                        <span>${escapeHtml(ep.title)}</span>
+                                    </div>
+                                    <span style="color:#6b7280;font-size:11px;flex-shrink:0;white-space:nowrap;">${formatDuration(ep.duration)}${ep.startTime ? ' · ' + formatStartTime(ep.startTime) : ''}</span>
+                                </div>`;
+                        });
+                    }
+                    html += `</div>`;
+                });
+            }
+
+            html += `
+                <div class="section-title">
+                    <span>数据导出</span>
+                </div>
+                <div class="copy-format-group">
+                    <button class="copy-btn" data-course-copy="json">复制 JSON</button>
+                    <button class="copy-btn" data-course-copy="tree">复制文本树</button>
+                </div>
+            `;
+        }
+
+        content.innerHTML = html;
+        bindCourseButton(content);
+        bindCollapsibles(content);
+        content.querySelectorAll('[data-course-copy]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const v = buildCourseView();
+                if (!v) return;
+                const text = btn.dataset.courseCopy === 'json' ? JSON.stringify(viewToExport(v), null, 2) : viewToText(v);
+                copyToClipboard(text, btn);
+            });
+        });
+        content.querySelectorAll('[data-group-copy]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const v = buildCourseView();
+                const g = v && v.groups[Number(btn.dataset.groupCopy)];
+                if (!g || g.missing || g.episodes.length === 0) return;
+                copyToClipboard(groupToText(g), btn);
+            });
+        });
+
+        // 刷新外层“获取课程信息”面板高度
+        requestAnimationFrame(() => {
+            if (!content.classList.contains('collapsed')) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        });
+    }
+
+    // 捕获到新的课程接口响应后，若课程面板正在展示则自动刷新（防抖）
+    let courseRefreshTimer = null;
+    function scheduleCourseRefresh() {
+        if (courseRefreshTimer) return;
+        courseRefreshTimer = setTimeout(() => {
+            courseRefreshTimer = null;
+            const panel = document.getElementById('fenbi-id-panel');
+            if (!panel || panel.classList.contains('collapsed')) return;
+            const content = panel.querySelector('[data-content="course-info"]');
+            if (!content || content.dataset.ready !== '1') return;
+            renderCoursePanel();
+        }, 400);
+    }
+
+    // ========== 初始化 ==========
+    log('脚本开始加载 v3.17.2');
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            log('DOMContentLoaded 触发');
+            createPanel();
+        });
+    } else {
+        createPanel();
+    }
+
+    log('脚本初始化完成');
+})();

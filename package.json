@@ -1,0 +1,19 @@
+{
+  "name": "fenbi-toolkit",
+  "private": true,
+  "version": "3.17.2",
+  "type": "module",
+  "description": "粉笔综合工具（油猴脚本）工程化源码：题目 ID / 课程信息获取（接口旁路捕获·零新增请求）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/tampermonkey": "^5.5.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vite-plugin-monkey": "^8.1.1"
+  }
+}

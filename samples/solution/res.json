@@ -1,0 +1,511 @@
+{
+  "name": "间隔增长率、乘积增长率、年均增长率课前练习",
+  "materials": [
+    {
+      "id": 5668700,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_5cvqs",
+      "content": "<p>        2022年，全国软件和信息技术服务业规模以上企业超3.5万家，累计完成软件业务收入108126亿元，同比增长11.2%，增速较上年同期回落6.5个百分点。</p><p>        2022年，全国软件业利润总额12648亿元，同比增长5.7%，增速较上年同期回落1.9个百分点。软件业务出口额524.1亿美元，同比增长3.0%，增速较上年同期回落5.8个百分点。其中，软件外包服务出口额同比增长9.2%。</p><p>        2022年，东部、中部、西部和东北地区分别完成软件业务收入88663亿元、5390亿元、11574亿元和2499亿元，分别同比增长10.6%、16.9%、14.3%和8.7%。软件业务收入居前5名的北京、广东、江苏、山东、浙江共完成收入74537亿元，占比较上年同期提高2.9个百分点。</p><p>        2022年，全国15个副省级中心城市实现软件业务收入53419亿元，同比增长10.0%，增速较上年同期回落6.3个百分点；实现利润总额6924亿元，同比增长2.4%，增速较上年同期回落2.1个百分点。</p>",
+      "accessories": []
+    },
+    {
+      "id": 4146677,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_3uhfl",
+      "content": "<p>        2022年，全国共有260家银行机构和29家理财公司累计新发理财产品2.94万只，同比下降38.23%，降幅比上年同期扩大7.22个百分点；累计募集资金89.62万亿元，同比减少32.57万亿元。</p><p>        截至2022年底，全国共有278家银行机构和29家理财公司有存续的理财产品，共存续产品3.47万只，同比下降4.41%；存续规模27.65万亿元，同比下降4.66%。分机构类型来看，理财公司存续产品13947只，存续规模22.24万亿元，同比增长29.36%。银行机构中，城商行存续产品9064只，存续规模2.45万亿元，同比下降32.34%；农村金融机构存续产品7808只，存续规模1.09万亿元，同比下降2.63%；股份制银行存续产品1208只，存续规模0.88万亿元，同比下降82.99%；大型银行存续产品668只，存续规模0.92万亿元，同比下降49.26%；其他机构存续产品1980只，存续规模0.07万亿元，同比下降13.42%。</p><p>        截至2022年底，持有理财产品的投资者数量为9671.27万个，较年初增长18.96%，其中机构投资者数量为95.95万个，数量占比同比提升了0.22个百分点；在持有理财产品的个人投资者中，数量最多的是风险偏好为二级（稳健型）的投资者，占比35.44%。</p>",
+      "accessories": []
+    },
+    {
+      "id": 338024,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_aa38",
+      "content": "<p>        2021年，全国纺织品服装出口3155亿美元，同比增长8.4%。其中，纺织品出口1452.2亿美元，同比下降5.6%，较2019年增长22.0%；服装出口1702.8亿美元，同比增长24.0%，较2019年增长16.0%。其中，针织服装及衣着附件出口864.8亿美元，同比增长39.0%；梭织服装及衣着附件出口701.2亿美元，同比增长12.6%。</p><p>        2021年，中国对美国、东盟、欧盟和日本的纺织品服装出口合计1724.9亿美元。其中，对美国出口额为563.5亿美元，同比增长4.0%；向东盟十国出口纺织品服装491.2亿美元，同比增长24.9%；对欧盟27国出口纺织品服装469.9亿美元，同比下降11.1%；对日本出口纺织品服装200.3亿美元，同比下降7.2%。</p><p>        2021年，中国向全球出口纺织纱线138亿美元，出口织物667亿美元，分别同比增长41.5%和34.3%。纺织制品当中，防疫类口罩出口额为129.5亿美元，出口金额、数量同比分别下降76.0%和13.0%。除防疫类口罩外，其他纺织制品出口额为517.2亿美元，同比增长27.5%。</p><p>        2021年，中国向“一带一路”沿线国家出口纺织品服装1137.9亿美元，同比增长24.5%，较2019年增长17.3%；同时，中国自“一带一路”沿线国家进口纺织品服装131.6亿美元，同比增长24.5%。</p>",
+      "accessories": []
+    },
+    {
+      "id": 336792,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_a8so",
+      "content": "<p>        2021年上半年，S市工业战略性新兴产业总产值7164.68亿元，比去年同期增长19.6%，两年平均增长12.3%。其中，新能源汽车、新能源和高端装备产值同比分别增长2.5倍、32.1%和24.5%。</p><p>        2021年上半年，全市第三产业增加值15080.35亿元，比去年同期增长11.3%。其中，信息传输、软件和信息技术服务业增加值1770.06亿元，比去年同期增加245.5亿元；批发和零售业增加值2428.92亿元，同比增长15.2%；金融业增加值3842.65亿元，比去年同期增加274.7亿元；房地产业增加值1812.18亿元，同比增长13.6%。</p><p>        2021年上半年，全市社会消费品零售总额9048.44亿元，比去年同期增加了2104.14亿元。分行业看，批发和零售业零售额8287.13亿元，同比增长28.4%；住宿和餐饮业零售额761.31亿元，同比增长54.0%。2021年上半年，全市网上商店零售额1485.72亿元，比去年同期增加259.92亿元。</p><p>        2021年上半年，全市新建商品房销售面积832.83万平方米，比去年同期增长29.2%。其中，新建商品住宅销售面积667.94万平方米，同比增长23.0%。</p>",
+      "accessories": []
+    },
+    {
+      "id": 6918704,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_6j4hg",
+      "content": "<p>        2021年1~2月，全国网上零售额17587亿元，同比增长32.5%，两年平均增长13.3%。其中，实物商品网上零售额14412亿元，同比增长30.6%，两年平均增长16.0%，占社会消费品零售总额的比重为20.7%；在实物商品网上零售额中，吃类、穿类和用类商品分别增长41.6%、44.3%和25.1%，两年平均分别增长33.8%、8.7%和16.0%。</p><p><img width=\"431px\" height=\"708px\" src=\"//fb.fenbike.cn/api/tarzan/images/18ce3d6f036419c.png?width=700\" /></p>",
+      "accessories": []
+    },
+    {
+      "id": 4630544,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_4da0g",
+      "content": "<p>        2023年全国著作权（包括作品著作权、计算机软件著作权、著作权质权）登记总量达8923901件，同比增长40.46%，增速比上年同期增加39个百分点。根据各省、自治区、直辖市版权局和中国版权保护中心作品登记信息统计，2023年全国共完成作品著作权登记6428277件，同比增长42.30%，登记量前五位的分别是：北京市1101072件，同比增加53802件；山东省873826件，同比增加619459件；福建省710648件，同比增加424814件；中国版权保护中心493070件，同比增加1476件；上海市412660件，同比增加30660件。从作品类型来看，登记量最多的是美术作品3296437件，第二是摄影作品2501968件，第三是文字作品329128件，前三类作品类型登记量占作品著作权登记总量的95.32%，该比例比上年同期增加4.86个百分点。</p><p>        2023年全国共完成著作权质权登记411件，同比增长17.43%，涉及主债务金额995817.4万元，同比增长82.82%；涉及担保金额985783.88万元，同比增长80.85%。其中计算机软件著作权质权登记361件，涉及主债务金额917149.06万元，涉及担保金额907399.56万元；作品（除计算机软件之外）著作权质权登记50件，同比下降26.47%，涉及主债务金额78668.34万元，同比下降55.13%，涉及担保金额78384.32万元，同比下降55.46%。</p>",
+      "accessories": []
+    },
+    {
+      "id": 4744191,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_4govv",
+      "content": "<p>        2025年10月全国规模以上互联网和相关服务企业（以下简称“互联网企业”）营业收入1769亿元，实现利润总额201亿元，研发费用98亿元。</p><p>        2025年1-10月，全国互联网企业实现营业收入16189亿元，同比增长9.6%，增速较上一年度同期提升4.4个百分点，较2025年1-9月减少3.9个百分点，实现利润总额1237亿元，同比下降1.9%，增速较上一年度同期减少19.3个百分点，较2025年1-9月提升8.1个百分点，研发费用累计支出862亿元，同比增长9.7%，增速较上一年度同期提升5.6个百分点，较2025年1-9月提升1.1个百分点。</p><p>        2025年10月东部地区互联网企业实现营业收入1566亿元，同比下降18.6%；中部地区互联网企业实现营业收入62亿元，同比增长36.3%；西部地区互联网企业实现营业收入138亿元，同比增长53.9%；东北地区互联网企业实现营业收入2亿元，同比下降14.3%。</p><p>        2025年1-10月东部地区互联网企业实现营业收入14523亿元，同比增长9.6%；中部地区互联网企业实现营业收入612亿元，同比下降1.7%；西部地区互联网企业实现营业收入1024亿元，同比增长18.1%；东北地区互联网企业实现营业收入30亿元，同比下降6.9%。</p>",
+      "accessories": []
+    },
+    {
+      "id": 246300,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_7ggs",
+      "content": "<p>        2019年1-8月，全国房地产开发投资84589亿元，同比增长10.5%，增速比1-7月回落0.1个百分点。其中，住宅投资65187亿元，增长14.9%，增速回落0.2个百分点。</p><p>        1-8月，东部地区房地产开发投资44857亿元，同比增长8.8%，增速比1-7月回落0.4个百分点；中部地区投资17809亿元，增长9.8%，增速加快0.3个百分点；西部地区投资18506亿元，增长16.0%，增速加快0.9个百分点；东北地区投资3418亿元，增长9.7%，增速回落1.3个百分点。</p><p>        1-8月，房地产开发企业土地购置面积12236万平方米，同比下降25.6%，每平方米土地价格同比上涨4.5%，土地成交额6374亿元。</p><p>        1-8月，东部地区商品房销售面积40303万平方米，同比下降3.6%，降幅比1-7月收窄0.6个百分点；销售额50739亿元，增长5.5%，增速加快0.3个百分点。中部地区商品房销售面积28791万平方米，增长0.5%，1-7月为下降0.1%；销售额20682亿元，增长7.4%，增速加快0.7个百分点。西部地区商品房销售面积28284万平方米，增长3.8%，增速加快1.0个百分点；销售额20363亿元，增长9.9%，增速加快0.6个百分点。东北地区商品房销售面积4471万平方米，下降6.6%，降幅收窄1.2个百分点；销售额3589亿元，增长2.3%，增速加快1.8个百分点。</p>",
+      "accessories": []
+    },
+    {
+      "id": 270540,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_886c",
+      "content": "<p>        2018年全球茶叶产量585.6万吨，同比增长约3%，中国茶叶产量261.6万吨，同比增长0.7万吨。2018年，中国茶叶国内销售量为191万吨，同比增长5.1%，国内销售总额为2661亿元，出口量为36.5万吨，同比增长2.8%，出口总额为17.89亿美元（合人民币120亿元），同比增长（？）。</p><p><img width=\"700px\" height=\"357px\" src=\"//fb.fbstatic.cn/api/tarzan/images/1776afb491bb29e.png?width=700\" /></p>",
+      "accessories": []
+    },
+    {
+      "id": 340962,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_acv2",
+      "content": "<p><img width=\"675px\" height=\"389px\" src=\"//fb.fbstatic.cn/api/tarzan/images/186897d389e0bf4.png?width=700\" /></p><p><img width=\"700px\" height=\"243px\" src=\"//fb.fbstatic.cn/api/tarzan/images/186897f46c7294b.png?width=700\" /></p>",
+      "accessories": []
+    },
+    {
+      "id": 312957,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_9hjt",
+      "content": "<p>        2020年我国数字经济规模达到39.2万亿元，保持9.7%的高位增长，占GDP比重为38.6%，同比提升2.4个百分点。</p><p>        产业数字化发展深入推进，2020年我国服务业、工业、农业数字经济占行业增加值比重分别为40.7%、21.0%和8.9%。</p><p>        2020年，数字经济规模超过1万亿元的省份有广东、江苏、山东、浙江、上海、北京、福建、湖北、四川、河南、河北、湖南和安徽；另有8个省份超过5000亿元；从GDP占比看，北京、上海领先，分别达到55.9%和55.1%；从增速上看，贵州、重庆、福建数字经济增速位列前三，增速超过15%。</p><p><img width=\"700px\" height=\"153px\" src=\"//fb.fbstatic.cn/api/tarzan/images/18f94e45c5967aa.png?width=700\" /></p><p><img width=\"599px\" height=\"395px\" src=\"//fb.fbstatic.cn/api/tarzan/images/17fc5ef112a63a4.png?width=700\" /></p><p><img width=\"669px\" height=\"397px\" src=\"//fb.fbstatic.cn/api/tarzan/images/17fc5ef212d2f69.png?width=700\" /></p>",
+      "accessories": []
+    },
+    {
+      "id": 7011537,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_6lv6h",
+      "content": "<p>        低空经济依托低空空域，以通用航空和民用无人驾驶航空为主体，涵盖载人飞行、货运配送和专业作业等活动。产业链包括研发制造、运营服务、空域管理和基础设施等环节。近年来，在政策推动和应用需求增长的作用下，我国低空经济呈现快速发展态势。</p><p><img width=\"683px\" height=\"131px\" src=\"//fb.fenbike.cn/api/tarzan/images/19bbbfa6eeac0f5.png?width=700\" /></p><p><img width=\"683px\" height=\"131px\" src=\"//fb.fenbike.cn/api/tarzan/images/19bbbfa960cdd5e.png?width=700\" /></p>",
+      "accessories": []
+    },
+    {
+      "id": 7364672,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_70o20",
+      "content": "<p><img width=\"653px\" height=\"460px\" src=\"//fb.fbstatic.cn/api/tarzan/images/19598c6093f7ba8.png?width=700\" /></p>",
+      "accessories": []
+    },
+    {
+      "id": 338025,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_aa39",
+      "content": "<p><img width=\"700px\" height=\"335px\" src=\"//fb.fenbike.cn/api/tarzan/images/185910b4ca3aaff.png?width=700\" /></p>",
+      "accessories": []
+    },
+    {
+      "id": 6425570,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_642v2",
+      "content": "<p>        2023年，我国铁路客运创历史最好水平，服务保障国家重大战略成效显著旅客运输。国家铁路旅客发送量完成36.85亿人，比上年增加20.75亿人；国家铁路旅客周转量（旅客周转量=旅客发送量×旅客平均运送距离）完成14717.12亿人公里，比上年增加8145.36亿人公里。</p><p><img width=\"648px\" height=\"426px\" src=\"//fb.fbstatic.cn/api/tarzan/images/1959ad82ba8cd0b.png?width=700\" /></p><p><img width=\"648px\" height=\"443px\" src=\"//fb.fbstatic.cn/api/tarzan/images/1959ad83e745077.png?width=700\" /></p>",
+      "accessories": []
+    },
+    {
+      "id": 3052875,
+      "tikuPrefix": "xingce",
+      "globalId": "4_1_2t5ab",
+      "content": "<p><img width=\"700px\" height=\"469px\" src=\"//fb.fbstatic.cn/api/tarzan/images/18ce4fa2fe5e80f.png?width=700\" /></p><p><img width=\"700px\" height=\"443px\" src=\"//fb.fbstatic.cn/api/tarzan/images/18ce4f126a23ad8.png?width=700\" /></p>",
+      "accessories": []
+    }
+  ],
+  "solutions": [
+    {
+      "id": 12536395,
+      "globalId": "3_1_buiib",
+      "tikuPrefix": "xingce",
+      "content": "<p>2022年，全国软件和信息技术服务业规模以上企业累计完成软件业务收入约比2020年增长了：</p>",
+      "type": 1,
+      "accessories": [{ "options": ["16%", "23%", "29%", "31%"], "type": 101 }],
+      "solution": "<p>根据题干“2022年······约比2020年增长了”，结合选项为百分数，可判定本题为间隔增长率问题。定位文字材料第一段可得：2022年，全国软件和信息技术服务业规模以上企业累计完成软件业务收入同比增长11.2%（<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=oFLAFZONnL-LVntinP8KUA\" />），增速较上年同期回落6.5个百分点。则2021年，全国软件和信息技术服务业规模以上企业累计完成软件业务收入同比增长11.2%+6.5%=17.7%（<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=34ZEncyrZ1G3WBsYsqoUjg\" />）。根据间隔增长率公式：<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=6GspzXYQU9KR2T8QxHExlC8-D12A1_pCO9pscetg2kMpeIiJsYmKy_ZlYdlA4OHu\" />，则所求<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=zZ6htj9Fufb41lMouMRHJivvnb-R8nfSu7PyFVN1zSZ0kI3xQZJoUdwVxpgMpFmN\" /><img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=UyRa1SeNZmIQ-FBupqEKOgtYN7OReUuqBVRSdgNttGY\" />，与D项最接近。</p><p>故正确答案为D。</p>",
+      "source": "2024年四川省公务员录用考试《行测》试题（网友回忆版）第86题",
+      "keypoints": [
+        { "id": 792414, "name": "间隔增长率" },
+        { "id": 784087, "name": "文字资料" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "3", "type": 201 }
+    },
+    {
+      "id": 16592960,
+      "globalId": "3_1_fqc20",
+      "tikuPrefix": "xingce",
+      "content": "<p>2022年全国银行机构和理财公司累计新发理财产品只数与2020年相比约：</p>",
+      "type": 1,
+      "accessories": [
+        { "options": ["下降45%", "下降57%", "下降66%", "下降69%"], "type": 101 }
+      ],
+      "solution": "<p>根据题干“2022年······与2020年相比约”，结合选项均为“下降+百分数”，可判定本题为间隔增长率问题。定位文字材料第一段可得：2022年，全国银行机构和理财公司累计新发理财产品2.94万只，同比下降38.23%（<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=oFLAFZONnL-LVntinP8KUA\" />），降幅比上年同期扩大7.22个百分点。则2021年全国银行机构和理财公司累计新发理财产品只数的同比增速<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=y2Ro9miTiKTPN9Nu4WGT7zovJQS-yB8yeNqtuvQMnag\" /><img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=-EUGZfEBDZ7Whn9jY0cRfQ\" />。根据间隔增长率公式：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=_D6wsXwB6Tl_T4Pxj-AcJTDAvDzxqJlz5KimW7fjt7g29RP0HC1hMRek8txH7AKf\" />，则题干所求<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=PK6fGeCEfbj2_Pph2jy0STtd9uALU_tNHmDJU0J68qo\" /><img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=r89soDx2qWfzCyHn87eRaWNZLToa-L-nH1ysxj4jQ5w\" /><img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=bHBEh6gIIC7vmmTzsM-PF7r_DzzDkqehMBciSYDKUqjC8wkK5Np0Ya0PSQlF_-Z-\" />，即约下降57%。</p><p>故正确答案为B。</p>",
+      "source": "2024年青海省公务员录用考试《行测》题（网友回忆版）第116题",
+      "keypoints": [
+        { "id": 792414, "name": "间隔增长率" },
+        { "id": 784087, "name": "文字资料" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "1", "type": 201 }
+    },
+    {
+      "id": 5445733,
+      "globalId": "3_1_56635",
+      "tikuPrefix": "xingce",
+      "content": "<p>2020年，全国服装出口额比2019年：</p>",
+      "type": 1,
+      "accessories": [
+        {
+          "options": [
+            "增长了10%以上",
+            "下降了10%以上",
+            "增长了不到10%",
+            "下降了不到10%"
+          ],
+          "type": 101
+        }
+      ],
+      "solution": "<p>根据题干“2020年······比2019年”，结合选项为增长/下降+百分数，且材料给出2021年全国服装出口额的同比增速以及相对于2019年的增速，可判定本题为间隔增长率问题。定位文字材料第一段可得：2021年，全国服装出口1702.8亿美元，同比增长24.0%（<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=oFLAFZONnL-LVntinP8KUA\" />），较2019年增长16.0%（<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=j79Pfc0xf6NPcxQ_q9fuZg\" />）。根据公式：<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=YXa5C6QBVeAuDpsutjc-P5QyXyXSkXpDP92zFPmpb1M\" />，代入数据则有<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=j_WIvV7eUt9TH41VuqHUgnODesLLOUZyzu7GtxXc7n0-Oi1SBmEk-AOplpMMKcMr\" />，解得<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=sb5szGH1jz59vhDKXjuf-JtmeUDXxj7HhONBYD6kFjGJ3H9i653DH7yOe0qI4LfR\" />，即下降了不到10%。</p><p>故正确答案为D。</p>",
+      "source": "2023年国家公务员录用考试《行测》题（副省级网友回忆版）第131题",
+      "keypoints": [
+        { "id": 792414, "name": "间隔增长率" },
+        { "id": 784087, "name": "文字资料" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [
+        {
+          "label": "applicable_type",
+          "options": [{ "intOptionId": 7, "optionDesc": null }],
+          "type": 190
+        }
+      ],
+      "correctAnswer": { "choice": "3", "type": 201 }
+    },
+    {
+      "id": 5430273,
+      "globalId": "3_1_55n01",
+      "tikuPrefix": "xingce",
+      "content": "<p>2020年上半年，S市工业战略性新兴产业总产值同比增长在以下哪个范围内？</p>",
+      "type": 1,
+      "accessories": [
+        { "options": ["不到7%", "7~10%", "10~13%", "超过13%"], "type": 101 }
+      ],
+      "solution": "<p>根据题干“2020年上半年······总产值同比增长······”，结合选项带百分号，且材料给出2021年S市工业战略性新兴产业总产值的上半年增速和两年平均增速，可判定本题为间隔增长率问题。定位文字材料第一段可得：2021年上半年，S市工业战略性新兴产业总产值比去年同期增长19.6%，两年平均增长12.3%。根据年均增长率公式：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=_S63vUhlkUULNRIFs8fusEYfRTTdS_I1mMPRBgcY_jKMPwUCXNRX56W12XA9jRQc\" />，且<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=kgGHSlEJMCETnx7BJdGXlRWJZ3FpCJ55F0jcOh6HXNcksvx2Sw5SJiqu8VTZj2Xp\" />，可得<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=BbkQ7UMcD4z5koSPMc-qfz-JQmwaQJvcw2NQlUkolfBAGhL4Hctakh787AWkxdSa\" />，故<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=wnRkoa8X6fznCtOJcQBb4_InObeguaqMdmtDVZ9erzE\" />。根据间隔增长率公式：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=YXa5C6QBVeAuDpsutjc-P5QyXyXSkXpDP92zFPmpb1M\" />，代入数据可得：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=1tGRnoT1NHQTqA3n59RkUbW03_-Wnb39lswK7nzMimS4Ld1nWi2oOu3ZqFYAkXYu\" />，解得<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=UoFzYrKqVPtm7ppYf3n5crQ8_ZibDqzhlRX4VOHpPkc\" />，故2020年上半年，S市工业战略性新兴产业总产值同比约增长5.4%，在A项范围内。</p><p>故正确答案为A。</p>",
+      "source": "2023年浙江省公务员录用考试《行测》题（C类）（网友回忆版）第6题",
+      "keypoints": [
+        { "id": 792414, "name": "间隔增长率" },
+        { "id": 784087, "name": "文字资料" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "0", "type": 201 }
+    },
+    {
+      "id": 12536403,
+      "globalId": "3_1_buiij",
+      "tikuPrefix": "xingce",
+      "content": "<p>在2020年1~2月①全国网上零售额和②实物商品网上零售额中：</p>",
+      "type": 1,
+      "accessories": [
+        {
+          "options": [
+            "仅①同比正增长",
+            "仅②同比正增长",
+            "①和②均同比正增长",
+            "①和②均未同比正增长"
+          ],
+          "type": 101
+        }
+      ],
+      "solution": "<p>根据题干“在2020年1~2月①全国网上零售额和②实物商品网上零售额中”，结合选项为“······正增长”，且材料给出二者的两年平均增长率，可判定本题为间隔增长率问题。定位文字材料可得：2021年1~2月，全国网上零售额17587亿元，同比增长32.5%，两年平均增长13.3%。其中，实物商品网上零售额14412亿元，同比增长30.6%，两年平均增长16.0%。根据n=2时的年均增长率公式：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=MeBKZpNnnpJ7IyUtMLSJxpyfRevRGd0zezVKDcS3-EpQyNLBW-4yTM2YnFXsVl2R\" />，和间隔增长率公式：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=trEeB3ASEcOxdoAUCaDFzRLJRFhHkv4kWkHkkUxOcCc\" />，且<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=kgGHSlEJMCETnx7BJdGXlW8XWaBCNb3RuO8jYYJgsjtaIJ9du11iTIysLpdt008J\" />，可得<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=UnHFrlZqoOXAToZOdZRO_tMp7FfJM3jtkegQX1ua3Cszp24Tz8zr1g6wxQ_EIGA5\" />。设2020年1~2月全国网上零售额同比增长率为a，可列式<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=x1yeYT9WFZWd7a_dSxA75YjxDD-z2vUhDRo2_1aNpTg\" /><img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=o_Mhj2CeRkYqdTqtb2I5ycbL1SBW14V9UjohyeQC3ZQ\" />，可化简得<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=Kj5Jk4FhLqnbFDN1qaPbesDYUtZ-a3uycmjpMzGr7USVuElIwkL05pG2YvmGbq14\" />，即2020年1~2月全国网上零售额同比负增长；设2020年1~2月实物商品网上零售额同比增长率为b，同理可列式<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=vMa4xb_PhrXUvPgEladFv8lbnA4piU7vE75QjhuYl1w\" /><img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=BWuq8jYtI727W0Pjj2QmPvajoJMoEZAxnWzg4SMfN1s\" />，可化简得<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=VRyOFi7uHGUZ6xzWYPfYAl-LRJ4BgUzc1H9MNOtTunr6D_MpkDCf6NiKyEaI8orn\" />，即2020年1~2月实物商品网上零售额同比正增长。<br>故正确答案为B。</p>",
+      "source": "2024年四川省公务员录用考试《行测》试题（网友回忆版）第91题",
+      "keypoints": [
+        { "id": 784090, "name": "综合资料" },
+        { "id": 792414, "name": "间隔增长率" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "1", "type": 201 }
+    },
+    {
+      "id": 13504439,
+      "globalId": "3_1_cs3tn",
+      "tikuPrefix": "xingce",
+      "content": "<p>2021年全国著作权登记总量约为：</p>",
+      "type": 1,
+      "accessories": [
+        { "options": ["626万件", "656万件", "685万件", "728万件"], "type": 101 }
+      ],
+      "solution": "<p>根据题干“2021年全国著作权登记总量约为”，结合材料时间为2023年，可判定本题为间隔基期问题。定位文字材料第一段可得：2023年全国著作权（包括作品著作权、计算机软件著作权、著作权质权）登记总量达8923901件，同比增长40.46%（<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=oFLAFZONnL-LVntinP8KUA\" />），增速比上年同期增加39个百分点。则2022年全国著作权登记总量的同比增速为40.46%-39%=1.46%（<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=34ZEncyrZ1G3WBsYsqoUjg\" />）。根据公式：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=YXa5C6QBVeAuDpsutjc-P46nQIGJZs7a6_2ZZ7u58HE\" />，则2023年全国著作权登记总量比2021年增长了<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=4lOyYqiAnmDhJnhcojVoHFqQPCQLTlBQsOgj0SjNNGnPQY-pCa9MN4yMvfkqJTdJ\" /><img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=vnjMA7ReI7MSzZFRjSKGpWqeRonvaN-NoNMyvgydvVOZcSVqE8tqLr5VIIGQrPg2\" />（<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=ZLiznopJTDcQJnwe32leCw\" />）。根据公式：间隔基期量<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=EJne-omLhZ0FR1-iNdylh5lGgurezoJ0uCfE6La11Pw\" />，则所求为<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=ZNWp06XyA_ooMK5mWoSliamHWItLrELcjyXGFFr1glQKYJ-fV6nB6JqR49TyCE18z1ax03EmD_bN_8zfNq8AufEqCM9jTxPXtxV_444TOM-iklthrSvEb2RhZu0V8fhSXnqhyTeJ28XzpdZqnhX_Hw\" />万件，与A项最接近。</p><p>故正确答案为A。</p>",
+      "source": "2025年河北省公务员录用考试《行测》题（网友回忆版）第111题",
+      "keypoints": [
+        { "id": 792411, "name": "间隔基期" },
+        { "id": 784087, "name": "文字资料" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "0", "type": 201 }
+    },
+    {
+      "id": 15833707,
+      "globalId": "3_1_f36jb",
+      "tikuPrefix": "xingce",
+      "content": "<p>2023年1-10月，全国互联网企业实现利润总额在以下哪个范围内？</p>",
+      "type": 1,
+      "accessories": [
+        {
+          "options": [
+            "不到900亿元",
+            "900亿-1000亿元之间",
+            "1000亿-1100亿元之间",
+            "超过1100亿元"
+          ],
+          "type": 101
+        }
+      ],
+      "solution": "<p>根据题干“2023年1-10月······利润总额在以下哪个范围内”，结合材料时间为2025年1-10月，可判定本题为间隔基期问题。定位文字材料第二段可得：2025年1-10月，全国互联网企业实现利润总额1237亿元，同比下降1.9%（<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=oFLAFZONnL-LVntinP8KUA\" />），增速较上一年度同期减少19.3个百分点。则2024年1-10月全国互联网企业实现利润总额的同比增速（<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=34ZEncyrZ1G3WBsYsqoUjg\" />）=-1.9%+19.3%=17.4%。根据公式：间隔增长率<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=DZaVL00nj6oFNPLzWiY5IqO5Y-ddSQop7uzDSkbNnMM\" />，可得间隔增长率<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=zL2mYGWaqNddjLlyHXX_HGwGW5GDNiZUaOzmy6dbUtLsaLcfL2BHeNlTSTg7N-te\" /><img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=VV8wXGu3PTnqzMVqLz-Xg0aDISZPb9Wj1TCu8igjP58\" />。根据公式：基期量<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=EJne-omLhZ0FR1-iNdylh7ggmdEaxPldU5-KOoxgtWk\" />，可得所求<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=P_YjesZuHdZWCZ52wITiBSeCBpivtUNU-RAy3ds7Eoo\" /><img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=5QHkSifvan-Z3Fxie9mWrfMg7pY82MA-_qkD1f2nNIJSS2Gx8HTOYqBPtXRX7Ys2\" />亿元，在C项范围内。</p><p>故正确答案为C。</p>",
+      "source": "2026年黑龙江公务员录用考试《行测》题（网友回忆版）第117题",
+      "keypoints": [
+        { "id": 792411, "name": "间隔基期" },
+        { "id": 784087, "name": "文字资料" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "2", "type": 201 }
+    },
+    {
+      "id": 2443083,
+      "globalId": "3_1_2ahqb",
+      "tikuPrefix": "xingce",
+      "content": "<p>2019年1-8月，房地产开发企业土地成交额与去年同期相比增长约：</p>",
+      "type": 1,
+      "accessories": [
+        {
+          "options": [
+            "<p>-17%</p>",
+            "<p>-22%</p>",
+            "<p>-27%</p>",
+            "<p>1.2%</p>"
+          ],
+          "type": 102
+        }
+      ],
+      "solution": "<p>根据题干“2019年1-8月，······与去年同期相比增长约”，结合选项是百分数，且每平方米土地价格<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=c-Mi_VQIpLtcWFOJLhS8lAV7vw7milLRqE8UuDGmNWMjcftGvReKeZgmUYIxQSR1ZmHN3XMg37WZ3ccN2w4GQlqXLf3KRv7RF0tEU3UPtWQmPhJ-yrStVES5OwrKPXot\" />，可判定本题为平均数的增长率问题。定位文字资料第三段可知，2019年1-8月，房地产开发企业土地购置面积同比下降25.6%（b），每平方米土地价格同比上涨4.5%（r）。根据平均数增长率公式：<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=uWx21VfJ8thuLvSO44JYNIxEQxfcYzD_eXKo2uZgF_g\" />，房地产开发企业土地成交额增速为a，代入公式得：<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=EJnwqsfybmWcZgZMEvsKyEHwB7JS7vc433REjyG_ojBZgK9QQ3QDUC9JaIqxUnXg\" />，则a=4.5%×（1-25.6%）-25.6%≈-22%。</p><p>故正确答案为B。</p>",
+      "source": "2019年辽宁省公务员录用考试《行测》题（网友回忆版）第103题",
+      "keypoints": [
+        { "id": 784113, "name": "平均数的增长率" },
+        { "id": 784087, "name": "文字资料" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "1", "type": 201 }
+    },
+    {
+      "id": 2742312,
+      "globalId": "3_1_2jm18",
+      "tikuPrefix": "xingce",
+      "content": "<p>资料中“（？）”处应当填入的数值最可能是以下哪一个？</p>",
+      "type": 1,
+      "accessories": [
+        {
+          "options": ["<p>12%</p>", "<p>16%</p>", "<p>20%</p>", "<p>24%</p>"],
+          "type": 102
+        }
+      ],
+      "solution": "<p>根据题干“资料中‘（？）’处应当填入的数值最可能是以下哪一个”，结合材料可知？处为同比增速，可判定本题为一般增长率计算问题。定位文字材料及图形材料可得，2018年，中国茶叶出口总额为17.89亿美元，2017年茶叶出口量为35.5万吨，出口均价4.5千美元/吨。则2017年出口总额为<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=zicLCFIGaJXzltSEV_479RxkDw1XQimLihp7pcQjeTVbfid94C3__nsBoacMK2Oj\" /><img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=8Vp5JPpOui6ATsbTpdHD86-gyhcPALQuT3Db-pyYsIY\" /><img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=2j8h3M82ACHS3_nY8ueQaBLuG-6xJksrrWlLd8MzVGk\" />，2018年出口总额同比增速为<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=jzeU9pkUb4RmaY6mKnGpS4ZO6k0Z_IxWCecBtzkhCjhjYll8g8NVXrKXXFOd_Bkp\" /><img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=zsRjn6qvSI-IzqVJ0vx1Fj935e2ofIlOnw_vswyJ640\" />。</p><p>故正确答案为A。</p>",
+      "source": "2021年北京市公务员录用考试《行测》题（区级及以上卷）（网友回忆版）第128题",
+      "keypoints": [
+        { "id": 784090, "name": "综合资料" },
+        { "id": 784104, "name": "一般增长率" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "0", "type": 201 }
+    },
+    {
+      "id": 5509998,
+      "globalId": "3_1_584re",
+      "tikuPrefix": "xingce",
+      "content": "<p>假设羊肉每年以零售价格全部售罄，那么，2021年羊肉销售收入同比增长约：</p>",
+      "type": 1,
+      "accessories": [
+        { "options": ["5.2%", "10.4%", "17.6%", "22.7%"], "type": 101 }
+      ],
+      "solution": "<p>方法一：根据题干“2021年······同比增长约”，结合选项为百分数，可判定本题为一般增长率问题。定位图表可得：2021年、2020年羊肉产量分别为514.1万吨、492.3万吨，2021年、2020年羊肉零售价格分别为81.40元/公斤、77.01元/公斤。因题目假设羊肉每年以零售价格全部售罄，故羊肉销售收入=产量×零售价格，则2021年羊肉销售收入=514.1万吨×81.40元/公斤<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=bQ33Bk_BAV_gwiXy0cSTbQ\" />51亿公斤×81元/公斤=4131亿元；2020年羊肉销售收入=492.3万吨×77.01元/公斤<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=bQ33Bk_BAV_gwiXy0cSTbQ\" />49亿公斤×77元/公斤=3773亿元。根据公式：增长率<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=EJne-omLhZ0FR1-iNdylh-fU73O8_CUBrJlYmyFWqBEzPp7dq_Ckm4TwL4gCiOZx\" />，则2021年羊肉销售收入同比增长<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=azrMTP_3QDfNx25yiD-pDl-pTNiBXwaAj6qhtxH5AEfKeh4bzcHI-c6QsY7v4a94x8WXvr-LruCOJpzFx8qxBQ\" />，与B项最接近。</p><p>方法二：根据题干“2021年······同比增长约”，结合选项为百分数，且题目假设羊肉每年以零售价格全部售罄，故羊肉零售价格<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=fPe1foDEFZdTRln7XFWp7EI9FJK3gkvT5EHrGfRaA-rHgeXPl02vrTVqqdcVyvZv\" />，可判定本题为平均数的增长率问题。定位图表可得：2021年、2020年羊肉产量分别为514.1万吨、492.3万吨，2021年、2020年羊肉零售价格分别为81.40元/公斤、77.01元/公斤。根据公式：增长率<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=EJne-omLhZ0FR1-iNdylh-fU73O8_CUBrJlYmyFWqBEzPp7dq_Ckm4TwL4gCiOZx\" />，则2021年羊肉产量同比增长率为<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=c2LgDp8at3tkyud5sPl9Q46F0twWCDsovjE_dBkq6lnD37-S3jJXeT-9-y0IcqOMp6Gi8yIzRSdYmZ45ZKEM_mqHXsDah9ftKKeVzROA1wc\" />（b）（也可根据第一小题答案直接使用），2021年羊肉零售价格同比增长率为<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=YKoJ946dnStE_WM-fCIuL5UtX6GCOVOx68OrbbOeeCSono20QvMRPNcItlcHiFApexsttYAr2tyWW-jIyDw17A\" />（r）。根据平均数的增长率公式：r<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=uRbJel5OBXKPh1PqvuQrnB-4N37WAhBSnmmVO1KSdUE\" />，设2021年羊肉销售收入同比增长率为a，代入公式得：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=jWhHkptlqThacwBtRnSYnfGoDUpXptKEU-PTzuo9YipCWcG4N9jaIjdpVYjnp2sC\" />，则a<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=kgir9SNN79oxLXgKlc6vKEmG65kGFlIjHDqo2Op4ytq-64GYCJQv6a01JZVX5NAJ\" />。</p><p>故正确答案为B。</p>",
+      "source": "2023年新疆公务员录用考试《行测》试题（网友回忆版）第109题",
+      "keypoints": [
+        { "id": 784090, "name": "综合资料" },
+        { "id": 784104, "name": "一般增长率" },
+        { "id": 784113, "name": "平均数的增长率" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "1", "type": 201 }
+    },
+    {
+      "id": 4817783,
+      "globalId": "3_1_4j0rn",
+      "tikuPrefix": "xingce",
+      "content": "<p>2020年，产业数字化规模同比增长约：</p>",
+      "type": 1,
+      "accessories": [
+        { "options": ["9.2%", "9.8%", "10%", "10.7%"], "type": 101 }
+      ],
+      "solution": "<p>根据题干“2020年······同比增长约”，结合选项为百分数，可判定本题为一般增长率问题。定位文字材料第一段可得：2020年我国数字经济规模达到39.2万亿元，保持9.7%的高位增长。定位统计图1可得：我国数字经济内部结构中，2019年产业数字化占比为80.20%，2020年产业数字化占比为80.90%。根据公式：部分=整体×比重、增长率<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=EJne-omLhZ0FR1-iNdylh-fU73O8_CUBrJlYmyFWqBEPl3Hld7lN1fixhByma6Co\" /><img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=EJne-omLhZ0FR1-iNdylh1g5rLrcJJWahTagZXKSIN8Sjd4mdiqMw3027jsePyLp\" />，可得2020年产业数字化规模同比增长<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=r61OHR5pCXISKkPni5jVfbLJxtEuMesinNb35Gv60OrsAiS6e8tug9GIPUyUt9uDVgN2G70gHo_Es1QwvoucvA\" /><img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=BL9byR3eYoNES9yeWCVKiwWMEqYo56FX_5SMSlhWuB9Th0RbvDZ7NY04b29-iuRu\" /><img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=Z88YFOeBDfaEy7VUtjv4c7fFcxVR0HR2-1DFpiJTkR8\" />。</p><p>故正确答案为D。</p>",
+      "source": "2022年四川省公务员录用考试《行测》题（网友回忆版）第89题",
+      "keypoints": [
+        { "id": 784090, "name": "综合资料" },
+        { "id": 784104, "name": "一般增长率" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "3", "type": 201 }
+    },
+    {
+      "id": 19452629,
+      "globalId": "3_1_ihkml",
+      "tikuPrefix": "xingce",
+      "content": "<p>2021-2024年期间，下列各项指标中，年均增长速度最快的是<u>        </u>。</p>",
+      "type": 1,
+      "accessories": [
+        {
+          "options": [
+            "传统通用航空企业数量",
+            "通用航空在册航空器总数",
+            "无人机运营企业数量",
+            "全行业注册无人机总数"
+          ],
+          "type": 101
+        }
+      ],
+      "solution": "<p>根据题干“2021-2024年期间······年均增长速度最快的是”，可判定本题为年均增长率问题。定位表1和表2可知选项各指标2021年和2024年数据。根据年均增长率公式：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=_S63vUhlkUULNRIFs8fusEYfRTTdS_I1mMPRBgcY_jJpVLaD__24HKIjssCdwIEE\" />，当年份差n相同时，直接比较<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=kgGHSlEJMCETnx7BJdGXlWFx8vxIQjyIDMfH81nC6G0\" />即可。传统通用航空企业数量：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=VS_2cGUM5YA8OxwIo7C0ChYYsiNvtcww3Ck9y9NNyNA\" />；通用航空在册航空器总数：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=PI0Xfm4JJoDhYkN72q5DcazJ7KNajRX0CnyPxlW-kB4\" />；无人机运营企业数量：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=irka_-K7SVg6bQyelc_Llif5eU2HlDbaMkk4aq5l8sA\" />；全行业注册无人机总数：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=j1X2dqMiyL_iVHJsb-RSFHWJ2LCUurROQkidJAcd_OA\" />。比较可知，2021-2024年期间，选项各指标年均增长速度最快的是全行业注册无人机总数。</p><p>故正确答案为D。</p>",
+      "source": "2026年上海市公务员录用考试《行测》题（网友回忆版）第121题",
+      "keypoints": [
+        { "id": 784090, "name": "综合资料" },
+        { "id": 792415, "name": "年均增长率" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "3", "type": 201 }
+    },
+    {
+      "id": 13504295,
+      "globalId": "3_1_cs3p7",
+      "tikuPrefix": "xingce",
+      "content": "<p>以下国家和地区中，2014-2023年新增光伏装机规模平均增速（以2014年为基准）最快的是：</p>",
+      "type": 1,
+      "accessories": [
+        { "options": ["欧洲", "美国", "拉美", "中东及北非"], "type": 101 }
+      ],
+      "solution": "<p>根据题干“······2014-2023年······平均增速（以2014年为基准）最快的是”，可判定本题为年均增长率问题。定位统计表可得：2014年欧洲、美国、拉美、中东及北非新增光伏装机规模分别为7.2GW、6.7GW、0.5GW、0.3GW；2023年欧洲、美国、拉美、中东及北非新增光伏装机规模分别为61.2GW、31.1GW、25.4GW、18.2GW。根据年均增长率公式：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=_S63vUhlkUULNRIFs8fusEYfRTTdS_I1mMPRBgcY_jJpVLaD__24HKIjssCdwIEE\" />，年份差n相同，比较年均增速只需比较<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=kgGHSlEJMCETnx7BJdGXlWFx8vxIQjyIDMfH81nC6G0\" />的大小。欧洲：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=Jm3OvUBm3h-4fATrQp5YtLMpNHZ8dEtBQ7ss6eKTAaU\" />；美国：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=wK7wMnlreVKDQc6UNAHD5JAISa-DhhSxrRSJ-oYpTv0\" />；拉美：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=U2i2FuZ2aImmnz9iC3PJSzxubEihUxiUmF-XM7WI8_I\" />；中东及北非：<img flag=\"tex\" src=\"//fb.fenbike.cn/api/planet/accessories/formulas?latex=T5s4MiaRYxsqzIvZOCld9pB6CfvPEOYJ78yTilU7xPo\" />，比较可得2014-2023年新增光伏装机规模平均增速最快的是中东及北非。</p><p>故正确答案为D。</p>",
+      "source": "2025年甘肃公务员录用考试《行测》题（网友回忆版）第117题",
+      "keypoints": [
+        { "id": 784088, "name": "统计表" },
+        { "id": 792415, "name": "年均增长率" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [
+        {
+          "label": "applicable_type",
+          "options": [{ "intOptionId": 7, "optionDesc": null }],
+          "type": 190
+        }
+      ],
+      "correctAnswer": { "choice": "3", "type": 201 }
+    },
+    {
+      "id": 5445745,
+      "globalId": "3_1_5663h",
+      "tikuPrefix": "xingce",
+      "content": "<p>将①甘肃、②广东、③上海和④浙江按2016~2021年集成电路产量年均增速（以2016年为基期计算）从高到低排列，以下正确的是：</p>",
+      "type": 1,
+      "accessories": [
+        { "options": ["④①②③", "④①③②", "①④②③", "①④③②"], "type": 101 }
+      ],
+      "solution": "<p>根据题干“······按2016~2021年······年均增速（以2016年为基期计算）从高到低排列······”，可判定本题为年均增长率问题。定位统计表可知2016年和2021年甘肃、广东、上海、浙江的集成电路产量。根据年均增长率公式：<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=_S63vUhlkUULNRIFs8fusEYfRTTdS_I1mMPRBgcY_jKMPwUCXNRX56W12XA9jRQc\" />（n为年份差），当年份差n相同时，直接根据<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=kgGHSlEJMCETnx7BJdGXlYvDtrqlruAPY_rnG9s_AWjG-gRR_JFgIv4wvo5cS5Ww\" />的值即可比较年均增长率的大小。计算各省份<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=QcsQtBZKpCIIL8pjsOBgVImz1_bUOAU-TjM57NukeMwCS33t7UBSMG-zY_MBQn02-Wf7m3c5L-FWUqOwJxo_9evyBzD9OBhNweQYN7sMm5I\" />可得：①甘肃<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=kHLE8xvzFBjlNQT61NPdZ19OAgxSGpxCNeQa4MmoEW4\" />；②广东<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=bUALv4MfuVwX4gOfJZ_QY-VYrtFJa1_Hk8W1lKP7eI4\" />；③上海<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=vOzL5QnM_AC3kyWmysSL_slbk2kZJBP7aFyX9H0h9HY\" />；④浙江<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=RCprrGbf_hc5d4LxpXh7NzLv4oa96TKR0fiCb9lG_xk\" />，则年均增速从高到低排列为：①④②③。</p><p>故正确答案为C。</p>",
+      "source": "2023年国家公务员录用考试《行测》题（副省级网友回忆版）第124题",
+      "keypoints": [
+        { "id": 784088, "name": "统计表" },
+        { "id": 792415, "name": "年均增长率" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "2", "type": 201 }
+    },
+    {
+      "id": 12881993,
+      "globalId": "3_1_c9429",
+      "tikuPrefix": "xingce",
+      "content": "<p>2021~2023年，国家铁路旅客周转量年均增长率（    ）。</p>",
+      "type": 1,
+      "accessories": [
+        {
+          "options": ["不到15%", "在15%到30%之间", "在30%到45%之间", "超过45%"],
+          "type": 101
+        }
+      ],
+      "solution": "<p>根据题干“2021~2023年······年均增长率”，可判定本题为年均增长率问题。定位图2可得：2021年、2023年国家铁路旅客周转量分别为9559.09亿人公里、14717.12亿人公里。根据公式：<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=RMw2VnyBMvhZrhf5zHYZGcrF6CAp38weUT-lEWQYmjP_Twa891a7qQcR0YfkU9OZdi4LymPmTYoa1f_TtNAgAA\" />（n为年份差），可得<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=RMw2VnyBMvhZrhf5zHYZGajbC4n1l7o9Q1h2apipBqEYvlWJ6eje3uYNkm-yWTKLTRd4L7DwTX6gbY0SObLERw\" />。由于<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=dkVPSO7DFmW2utK0vnxQ-w\" />，<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=3W2PMSwN7NmDaK5IeNd11g\" />，可知<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=crS3UDX3w7rEYo-HfRSpFgdeTeRUcK4GRyGCyKkJUWO51KZvLWBdcaYi7Kx6KGje\" />，因此20%&lt;年均增长率&lt;30%，在B项范围内。</p><p>故正确答案为B。</p>",
+      "source": "2025年广东省公务员录用考试《行测》题（网友回忆版）第88题",
+      "keypoints": [
+        { "id": 784090, "name": "综合资料" },
+        { "id": 792415, "name": "年均增长率" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "1", "type": 201 }
+    },
+    {
+      "id": 10718184,
+      "globalId": "3_1_a72v8",
+      "tikuPrefix": "xingce",
+      "content": "<p>2019-2022年，全国居民人均可支配收入的年均名义增长率为（    ）。</p>",
+      "type": 1,
+      "accessories": [
+        { "options": ["4.7%", "5.1%", "6.3%", "6.9%"], "type": 101 }
+      ],
+      "solution": "<p>根据题干“2019-2022年······年均名义增长率为”，可判定本题为年均增长率问题。定位图1可得：2019、2022年全国居民人均可支配收入分别为30733元、36883元。根据公式：<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=RMw2VnyBMvhZrhf5zHYZGcrF6CAp38weUT-lEWQYmjP_Twa891a7qQcR0YfkU9OZdi4LymPmTYoa1f_TtNAgAA\" />，可得<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=1-tfn_sZOEapQvH8xoK2KWvDY5jSzv23zXzKgepZVfI\" /><img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=5QHkSifvan-Z3Fxie9mWrakTkRzhukRKuAlR65Txx6DdVBnGvPsb1C2jaED5oPLg\" />。结合选项增长率数值较小，根据<img flag=\"tex\" src=\"//fb.fbstatic.cn/api/planet/accessories/formulas?latex=Bl-mPW_Nx1XLZjIK4m3fzpSKprp7X_vbR4rjAdMw9au8IBF9zbwRcsy4xWSxO1_R\" />进行估算，则有1+3r&lt;1.2，解得r&lt;6.7%，只有C项略小于6.7%。</p><p>故正确答案为C。</p>",
+      "source": "2024年深圳市考公务员录用考试《行测》试题（网友回忆版）第92题",
+      "keypoints": [
+        { "id": 784089, "name": "统计图" },
+        { "id": 792415, "name": "年均增长率" }
+      ],
+      "quizId": 1458,
+      "solutionAccessories": [],
+      "correctAnswer": { "choice": "2", "type": 201 }
+    }
+  ],
+  "card": {
+    "children": [
+      {
+        "children": [
+          { "materialKeys": ["4_1_5cvqs"], "key": "3_1_buiib", "nodeType": 2 },
+          { "materialKeys": ["4_1_3uhfl"], "key": "3_1_fqc20", "nodeType": 2 },
+          { "materialKeys": ["4_1_aa38"], "key": "3_1_56635", "nodeType": 2 },
+          { "materialKeys": ["4_1_a8so"], "key": "3_1_55n01", "nodeType": 2 },
+          { "materialKeys": ["4_1_6j4hg"], "key": "3_1_buiij", "nodeType": 2 },
+          { "materialKeys": ["4_1_4da0g"], "key": "3_1_cs3tn", "nodeType": 2 },
+          { "materialKeys": ["4_1_4govv"], "key": "3_1_f36jb", "nodeType": 2 },
+          { "materialKeys": ["4_1_7ggs"], "key": "3_1_2ahqb", "nodeType": 2 },
+          { "materialKeys": ["4_1_886c"], "key": "3_1_2jm18", "nodeType": 2 },
+          { "materialKeys": ["4_1_acv2"], "key": "3_1_584re", "nodeType": 2 },
+          { "materialKeys": ["4_1_9hjt"], "key": "3_1_4j0rn", "nodeType": 2 },
+          { "materialKeys": ["4_1_6lv6h"], "key": "3_1_ihkml", "nodeType": 2 },
+          { "materialKeys": ["4_1_70o20"], "key": "3_1_cs3p7", "nodeType": 2 },
+          { "materialKeys": ["4_1_aa39"], "key": "3_1_5663h", "nodeType": 2 },
+          { "materialKeys": ["4_1_642v2"], "key": "3_1_c9429", "nodeType": 2 },
+          { "materialKeys": ["4_1_2t5ab"], "key": "3_1_a72v8", "nodeType": 2 }
+        ],
+        "name": null,
+        "desc": null,
+        "questionCount": 16,
+        "chapterTimeLimitVO": null,
+        "nodeType": 1
+      }
+    ],
+    "nodeType": 0,
+    "type": 2
+  }
+}

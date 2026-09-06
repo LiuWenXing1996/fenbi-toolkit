@@ -1,0 +1,139 @@
+{
+  "code": 1,
+  "msg": "",
+  "data": {
+    "episodeSetId": 2166628,
+    "episodeCount": 98,
+    "episodeNodes": [
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2202077,
+          "title": "【大笔筒】合集讲义下载",
+          "brief": "",
+          "episodeCount": 6,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1787110981859,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2202078,
+          "title": "【大笔筒】合集解析下载",
+          "brief": "",
+          "episodeCount": 6,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1787110989303,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2202079,
+          "title": "【言语】-大笔筒",
+          "brief": "",
+          "episodeCount": 18,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": true,
+          "createdTime": 1787111001017,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2202080,
+          "title": "【数资】-大笔筒",
+          "brief": "",
+          "episodeCount": 18,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": true,
+          "createdTime": 1787111006614,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2202081,
+          "title": "【判断】-大笔筒",
+          "brief": "",
+          "episodeCount": 18,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": true,
+          "createdTime": 1787111016405,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2202082,
+          "title": "【政治理论】-大笔筒",
+          "brief": "",
+          "episodeCount": 9,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1787111023594,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2202083,
+          "title": "【科推】-大笔筒",
+          "brief": "",
+          "episodeCount": 8,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1787111030773,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2202084,
+          "title": "【申论】-大笔筒",
+          "brief": "",
+          "episodeCount": 15,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": true,
+          "createdTime": 1787111038461,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      }
+    ],
+    "total": 8
+  }
+}
