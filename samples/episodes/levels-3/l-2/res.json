@@ -1,0 +1,123 @@
+{
+  "code": 1,
+  "msg": "",
+  "data": {
+    "episodeSetId": 2133043,
+    "episodeCount": 36,
+    "episodeNodes": [
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2133047,
+          "title": "系列1：言语必考重点：对策的准确运用",
+          "brief": "",
+          "episodeCount": 5,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1777254837827,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2146591,
+          "title": "系列2：言语提分必学：解锁“并列”的解题",
+          "brief": "",
+          "episodeCount": 5,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1778642800894,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2151168,
+          "title": "系列3：言语提分金钥匙：主题词",
+          "brief": "",
+          "episodeCount": 5,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1779759172580,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2159460,
+          "title": "系列4：言语提分必学：言语中“百因必有果",
+          "brief": "",
+          "episodeCount": 4,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1780968998181,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2165067,
+          "title": "系列5：言语提分必学：探秘言语逻辑中的“",
+          "brief": "",
+          "episodeCount": 5,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1782177905155,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2171427,
+          "title": "系列6：直击痛点，稳步提分",
+          "brief": "",
+          "episodeCount": 4,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1783387975010,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2187613,
+          "title": "系列7：学霸养成专题",
+          "brief": "",
+          "episodeCount": 8,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": false,
+          "createdTime": 1785375952467,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      }
+    ],
+    "total": 7
+  }
+}

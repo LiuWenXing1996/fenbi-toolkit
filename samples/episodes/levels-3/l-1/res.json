@@ -1,0 +1,75 @@
+{
+  "code": 1,
+  "msg": "",
+  "data": {
+    "episodeSetId": 2133038,
+    "episodeCount": 154,
+    "episodeNodes": [
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2133043,
+          "title": "【言语】名师堂系列课程",
+          "brief": "",
+          "episodeCount": 36,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": true,
+          "createdTime": 1777254618312,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2133044,
+          "title": "【数资】名师堂系列课程",
+          "brief": "",
+          "episodeCount": 42,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": true,
+          "createdTime": 1777254741715,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2133045,
+          "title": "【判断】名师堂系列课程",
+          "brief": "",
+          "episodeCount": 37,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": true,
+          "createdTime": 1777254754077,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      },
+      {
+        "nodeType": 1,
+        "payload": {
+          "id": 2133046,
+          "title": "【申论】名师堂系列课程",
+          "brief": "",
+          "episodeCount": 39,
+          "enabledTag": true,
+          "enableLatestPlayableEpisode": true,
+          "createdTime": 1777254777186,
+          "lastAddEpisodeTime": 0,
+          "subTitle": null,
+          "guidePhaseJumpUrl": null,
+          "currentTime": false
+        }
+      }
+    ],
+    "total": 4
+  }
+}

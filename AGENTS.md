@@ -22,6 +22,7 @@ npm install        # 首次安装依赖
 npm run build      # 构建 → dist/fenbi-question-id.user.js
 npm run dev        # 开发模式（热更，产物供 Tampermonkey @require 调试）
 npm run typecheck  # tsc --noEmit
+npm run test:course  # 课程信息回归测试（真实抓包样例驱动，产物在 node_modules/.cache，零新增依赖）
 ```
 
 UserScript 元数据（match / grant / run-at / version）在 `vite.config.ts` 集中维护；version 同时存在于 `package.json`。
@@ -34,11 +35,11 @@ src/
 ├── capture/            # 网络旁路捕获层（唯一触碰 unsafeWindow 的副作用代码）
 │   ├── urls.ts         #   接口 URL 匹配（/solution /exercise /detail_for_sale /episode_nodes）
 │   ├── quiz.ts         #   题目接口捕获 + 最新命中查找
-│   ├── course.ts       #   课程接口捕获（URL 解析 courseId / episode_set_id）
+│   ├── course.ts       #   课程接口捕获（URL 解析 courseId / episode_set_id，按 set id 落 sets 缓存）
 │   └── install.ts      #   fetch / XHR hook（只 patch 一次，__fenbiQuizHookInstalled 防重）
 ├── store/              # 共享状态（收敛原单文件的全局缓存）
 │   ├── quiz.ts         #   quizApiCaptures 缓存 + 当前展示数据 quizState + 数据类型
-│   └── course.ts       #   courseByCourseId / courseLastId
+│   └── course.ts       #   courseByCourseId（detail + sets{} + rootSetId）/ courseLastId
 ├── parse/              # 纯函数：接口响应 → 展示数据结构（可单测，勿引入 DOM）
 ├── core/               # 纯工具：log / utils(escapeHtml) / copy / finder / format
 ├── ui/
@@ -57,7 +58,7 @@ src/
 - 接口里 **`id` 是 number，`globalId` 是 string**（形如 `3_1_buiib`）。关联关系（card 树）用的是 globalId。类型定义见 `src/store/quiz.ts`，修改时以 `samples/solution/`、`samples/exercise/` 等目录下的抓包样例为准。
 - 题目接口：`/solution` 响应字段 `solutions`；`/exercise` 响应字段 `questions`。统一由 `parse/quiz.ts` 归一化。
 - `card.children` 树中 `nodeType === 2` 的叶子节点是一道题：`key` 为题的 globalId，`materialKeys` 是其关联材料。
-- 课程接口：`/detail_for_sale`（课程详情）、`/episode_nodes`（无 `episode_set_id` 参数时为分组列表，带该参数时为某分组课时列表）。URL 形如 `/lectures/{courseId}/...`。
+- 课程接口：`/detail_for_sale`（课程详情，仅商品页触发，**可缺**）；`/episode_nodes` 按 episode set id 分多次请求：URL 带 `episode_set_id` 参数取该 set 的下一层内容，一次响应可能是分组描述列表（nodeType ≠ 6，用 `payload.id` 再取下一层）也可能是课时列表（nodeType = 6），展示层按 set id 递归拼树，支持多层嵌套。URL 形如 `/lectures/{courseId}/...`。
 - 内存扫描兜底策略：遍历页面全局变量，关键词优先级排序 + 1.5s 超时 + 深度 5 + 对象数上限 + 循环引用保护（`core/finder.ts`）。
 - 排除项（别再去接口响应里找）：题目接口响应体中**不存在** `checkId`、`examcatid` 字段；`examcatid`（如 1000183）仅作为请求 URL 参数出现。
 
@@ -72,9 +73,14 @@ src/
 
 ## 抓包样例目录（勿删除）
 
-`samples/` 下按接口存放抓包样例（`detail_for_sale`、`episode_nodes`、`exercise`、`solution`，各含 `res.json` + `url.txt`），用于理解接口结构与回归验证，不是运行产物。
+`samples/` 下按接口存放抓包样例，用于理解接口结构与回归验证，不是运行产物：
+
+- `episodes/levels-1/`、`levels-2/`、`levels-3/`：课程目录由浅到深的整条链路，每个 `l-N/` 含 `res.json` + `url.txt`；`l-0` 为 `detail_for_sale`，`l-1` 起为逐层 `episode_nodes`（无 `episode_set_id` 参数的是顶层列表）。
+- `exercise/`、`solution/`：题目接口样例（各含 `res.json` + `url.txt`）。
+
+`tests/course-regress/run.ts` 直接以这些样例为夹具驱动真实源码，跑 `npm run test:course` 验证。
 
 ## 里程碑与演进
 
 - 已完成：v3.17.2 单文件 → Vite + TS 多模块工程化（等价拆分），浏览器冒烟测试通过；原单文件归档在 `legacy/fenbi-question-id.user.js.v3.17.2.bak`。
-- 候选增强（未开始）：纯逻辑单测（parse/core）、接口响应类型补全 + 开启 strict、git 版本管理、开发期热更联调。
+- 候选增强（进行中）：课程侧回归测试已先行落地（`tests/course-regress` + `npm run test:course`）；纯逻辑单测（parse/core）、接口响应类型补全 + 开启 strict、git 版本管理、开发期热更联调仍未开始。

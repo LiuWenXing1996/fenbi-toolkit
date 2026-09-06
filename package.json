@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:course": "vite build -c tests/course-regress/vite.config.ts && node node_modules/.cache/course-regress/run.mjs"
   },
   "devDependencies": {
     "@types/tampermonkey": "^5.5.0",
