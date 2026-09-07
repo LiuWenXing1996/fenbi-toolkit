@@ -6,6 +6,8 @@ import { scheduleCourseRefresh } from '../features/coursePanel';
 // episode_nodes 深度不固定：URL 带 episode_set_id 参数时取的是该 set 的下一层内容，
 // 这一层可能是分组描述、也可能是课时，统一按响应体 data.episodeSetId 落 sets 缓存，
 // 展示层再按 set id 递归拼树（见 features/coursePanel）。
+// 同一 set 还可能按 URL start/len 分页多次请求：按 start 分别缓存到
+// CourseSetCapture.pages，渲染前由 coursePanel 合并，避免“后写覆盖只留最后一页”。
 
 export function extractCourseIdFromUrl(url: string): number {
     const m = String(url).match(/\/lectures\/(\d+)\//);
@@ -55,12 +57,20 @@ export function onCourseApiCaptured(url: string, json: any): void {
             log('episode_nodes 响应无法确定 episode set id，忽略:', String(url).substring(0, 90));
             return;
         }
-        rec.sets[setId] = item;
+        // 同一 set 的分页：不带 start 参数的请求视为第 0 页；按 start 落 pages，避免后页覆盖前页
+        const d = json && json.data;
+        const start = Math.max(0, Number(extractQueryParam(url, 'start')) || 0);
+        let set = rec.sets[setId];
+        if (!set) set = rec.sets[setId] = { pages: {}, total: null, ts: 0 };
+        set.pages[start] = item;
+        if (d && d.total != null) set.total = Number(d.total);
+        set.ts = item.ts;
+        const pageTag = start > 0 ? ' page=' + start : '';
         if (!extractQueryParam(url, 'episode_set_id')) {
             rec.rootSetId = setId;
-            log('旁路捕获顶层分组列表: courseId=' + courseId + ' episodeSetId=' + setId);
+            log('旁路捕获顶层分组列表: courseId=' + courseId + ' episodeSetId=' + setId + pageTag);
         } else {
-            log('旁路捕获分组内容: courseId=' + courseId + ' episodeSetId=' + setId);
+            log('旁路捕获分组内容: courseId=' + courseId + ' episodeSetId=' + setId + pageTag);
         }
     } else {
         return;

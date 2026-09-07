@@ -136,6 +136,48 @@ function assert(cond: any, msg: string): void {
         '深层直开: 应包装为单分组并展示 18 课时');
 }
 
+// ---------- 分页（999777）：同一 set 按 URL start/len 分页，多页需按 start 合并且提示未捕获完整 ----------
+{
+    function epNode(id: number): any {
+        return { nodeType: 6, payload: { id: id, title: '课时' + id, duration: 600, startTime: 0 } };
+    }
+    function pageFrom(start: number, count: number): any {
+        const ids: number[] = [];
+        for (let i = 0; i < count; i += 1) ids.push(3001001 + start + i);
+        return { code: 1, data: { episodeSetId: 3300002, episodeCount: 45, total: 45, episodeNodes: ids.map(epNode) } };
+    }
+    const b = 'https://ke.fenbi.com/win/gwy/v3/my/lectures/999777/episode_sets/3300001/episode_nodes?platform=win&len=20&';
+    onCourseApiCaptured(b + 'start=0', {
+        code: 1,
+        data: {
+            episodeSetId: 3300001, episodeCount: 45, total: 1,
+            episodeNodes: [{ nodeType: 1, payload: { id: 3300002, title: '全部课时', episodeCount: 45 } }]
+        }
+    });
+
+    // 乱序到达：先捕获第 2 页（start=20），再捕获第 1 页（start=0）
+    onCourseApiCaptured(b + 'start=20&episode_set_id=3300002', pageFrom(20, 20));
+    onCourseApiCaptured(b + 'start=0&episode_set_id=3300002', pageFrom(0, 20));
+    let v = buildCourseView();
+    const pg: any = v && v.groups.find((x: any) => x.id === 3300002);
+    assert(pg && pg.loaded && pg.episodes.length === 40, '分页: 两页应合并为 40 课时，实际=' + (pg ? pg.episodes.length : -1));
+    assert(pg && pg.episodes[0].id === 3001001 && pg.episodes[39].id === 3001040, '分页: 合并后应按页序保持课时顺序');
+    assert(v && v.totalEpisodes === 40, '分页: 整树课时数应为 40，实际=' + (v ? v.totalEpisodes : -1));
+    renderCoursePanel();
+    assert(capturedHtml.includes('已捕获 40/45'), '分页 UI: 未捕获完整时应提示 已捕获 40/45');
+
+    // 补上第 3 页（start=40，含去重校验：重放第 1 页不产生重复）
+    onCourseApiCaptured(b + 'start=40&episode_set_id=3300002', pageFrom(40, 5));
+    onCourseApiCaptured(b + 'start=0&episode_set_id=3300002', pageFrom(0, 20));
+    v = buildCourseView();
+    const pg2: any = v && v.groups.find((x: any) => x.id === 3300002);
+    assert(pg2 && pg2.loaded && pg2.episodes.length === 45, '分页: 三页应合并为 45 课时，实际=' + (pg2 ? pg2.episodes.length : -1));
+    assert(pg2 && pg2.episodes[44].id === 3001045, '分页: 合并后末尾应为第 45 课时');
+    assert(v && v.totalEpisodes === 45, '分页: 补全后整树课时数应为 45，实际=' + (v ? v.totalEpisodes : -1));
+    renderCoursePanel();
+    assert(!capturedHtml.includes('部分加载'), '分页 UI: 捕获完整后不应再有部分加载提示');
+}
+
 if (failed > 0) {
     console.error('共 ' + failed + ' 条断言失败');
     process.exit(1);

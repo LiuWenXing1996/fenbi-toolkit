@@ -58,7 +58,7 @@ src/
 - 接口里 **`id` 是 number，`globalId` 是 string**（形如 `3_1_buiib`）。关联关系（card 树）用的是 globalId。类型定义见 `src/store/quiz.ts`，修改时以 `samples/solution/`、`samples/exercise/` 等目录下的抓包样例为准。
 - 题目接口：`/solution` 响应字段 `solutions`；`/exercise` 响应字段 `questions`。统一由 `parse/quiz.ts` 归一化。
 - `card.children` 树中 `nodeType === 2` 的叶子节点是一道题：`key` 为题的 globalId，`materialKeys` 是其关联材料。
-- 课程接口：`/detail_for_sale`（课程详情，仅商品页触发，**可缺**）；`/episode_nodes` 按 episode set id 分多次请求：URL 带 `episode_set_id` 参数取该 set 的下一层内容，一次响应可能是分组描述列表（nodeType ≠ 6，用 `payload.id` 再取下一层）也可能是课时列表（nodeType = 6），展示层按 set id 递归拼树，支持多层嵌套。URL 形如 `/lectures/{courseId}/...`。
+- 课程接口：`/detail_for_sale`（课程详情，仅商品页触发，**可缺**）；`/episode_nodes` 按 episode set id 分多次请求：URL 带 `episode_set_id` 参数取该 set 的下一层内容，一次响应可能是分组描述列表（nodeType ≠ 6，用 `payload.id` 再取下一层）也可能是课时列表（nodeType = 6），展示层按 set id 递归拼树，支持多层嵌套。URL 形如 `/lectures/{courseId}/...`。同一 set 的内容还按 URL `start`/`len` 分页多次请求（响应 `data.total` 为该 set 直接子节点总数）：捕获层按 start 分页缓存（`store/course.ts` 的 `CourseSetCapture`），渲染前由 `coursePanel` 按 start 合并去重，避免后页覆盖前页。
 - 内存扫描兜底策略：遍历页面全局变量，关键词优先级排序 + 1.5s 超时 + 深度 5 + 对象数上限 + 循环引用保护（`core/finder.ts`）。
 - 排除项（别再去接口响应里找）：题目接口响应体中**不存在** `checkId`、`examcatid` 字段；`examcatid`（如 1000183）仅作为请求 URL 参数出现。
 

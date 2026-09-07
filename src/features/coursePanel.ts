@@ -2,13 +2,14 @@ import { escapeHtml } from '../core/utils';
 import { copyToClipboard } from '../core/copy';
 import { formatDuration, formatStartTime } from '../core/format';
 import { bindCollapsibles } from '../ui/collapsible';
-import { courseByCourseId, courseLastId, CourseRec, CourseCaptureItem } from '../store/course';
+import { courseByCourseId, courseLastId, CourseRec, CourseCaptureItem, CourseSetCapture } from '../store/course';
 
 // ========== 课程信息：组装 / 渲染 / 导出（数据全部来自旁路捕获，零新增请求） ==========
-// episode_nodes 按“episode set id”分多次请求返回。一次响应里的节点可能是分组描述
-// （nodeType ≠ 6，需用 payload.id 到 sets 缓存里再取下一层）或课时（nodeType = 6）。
-// 课程树深度不固定（可多层嵌套），这里按 set id 递归拼树；detail_for_sale 非必需，
-// 缺失时直接以 episode_nodes 数据展示（课程名缺省为“课程 ID”）。
+// episode_nodes 按“episode set id”分多次请求返回；同一 set 还按 URL start/len 分页，
+// 捕获层按页缓存（store 见 CourseSetCapture），这里渲染前先按 start 合并各页节点。
+// 一次响应里的节点可能是分组描述（nodeType ≠ 6，需用 payload.id 到 sets 缓存里再取
+// 下一层）或课时（nodeType = 6）。课程树深度不固定（可多层嵌套），这里按 set id 递归
+// 拼树；detail_for_sale 非必需，缺失时直接以 episode_nodes 数据展示（课程名缺省为“课程 ID”）。
 
 function getCourseContent(): HTMLElement | null {
     const panel = document.getElementById('fenbi-id-panel');
@@ -36,6 +37,7 @@ export interface CourseGroup {
     title: string;
     episodeCount: number; // 描述中的课时总数（可能含未捕获的更深层）
     loaded: boolean; // 该 set 的节点列表是否已捕获
+    nodeTotal: number | null; // 该 set 直接子节点总数（响应 data.total；null 表示响应未带），用于提示分页未捕获完整
     children: CourseGroup[]; // 更深一层分组（可能再嵌套）
     episodes: CourseEpisode[]; // 本层直接课时（nodeType = 6）
     seconds: number; // 本层直接课时总秒数
@@ -53,10 +55,46 @@ export interface CourseView {
 
 // ---------- 纯拼树：把某层节点列表构建成课程树（可脱离 DOM 复核） ----------
 
-function episodeNodesOf(item: CourseCaptureItem | undefined): any[] | null {
+/** 某 set 的分页节点列表（已按各页 start 升序合并去重）。无任何页带节点数组时返回 null */
+function mergedNodesOf(set: CourseSetCapture | undefined | null): any[] | null {
+    const item = mergedSetView(set);
     const d = item && item.data && item.data.data;
     if (!d || !Array.isArray(d.episodeNodes)) return null;
     return d.episodeNodes;
+}
+
+/** 把某 set 的已捕获页合并成“单响应视图”，供拼树/兜底标题统一读取（不改写 store） */
+function mergedSetView(set: CourseSetCapture | undefined | null): CourseCaptureItem | null {
+    if (!set) return null;
+    const starts = Object.keys(set.pages).map(Number).sort((a, b) => a - b);
+    if (!starts.length) return null;
+    const merged: any = {};
+    const nodes: any[] = [];
+    const seen = new Set<string>();
+    let hasNodes = false;
+    starts.forEach((s) => {
+        const p = set.pages[s];
+        if (!p) return;
+        const d = p.data && p.data.data;
+        if (!d) return;
+        if (merged.episodeSetId == null && d.episodeSetId != null) merged.episodeSetId = d.episodeSetId;
+        if (merged.title == null && typeof d.title === 'string') merged.title = d.title;
+        if (Array.isArray(d.episodeNodes)) {
+            hasNodes = true;
+            d.episodeNodes.forEach((n: any) => {
+                // 跨页去重：刷新时若某一页被更宽的页重新覆盖，同一节点只保留一次
+                if (n && n.payload && n.payload.id != null) {
+                    const key = (n.nodeType == null ? '' : n.nodeType) + ':' + n.payload.id;
+                    if (seen.has(key)) return;
+                    seen.add(key);
+                }
+                nodes.push(n);
+            });
+        }
+    });
+    if (!hasNodes) return null;
+    merged.episodeNodes = nodes;
+    return { data: { data: merged }, ts: set.ts };
 }
 
 function collectStats(groups: CourseGroup[], out?: { episodes: number; seconds: number }): { episodes: number; seconds: number } {
@@ -85,13 +123,16 @@ function buildGroupTree(nodes: any[], rec: CourseRec, depth: number): CourseGrou
             title: p.title || ('分组 ' + p.id),
             episodeCount: p.episodeCount || 0,
             loaded: false,
+            nodeTotal: null,
             children: [],
             episodes: [],
             seconds: 0
         };
-        const childNodes = episodeNodesOf(rec.sets[gid]);
+        const set = rec.sets[gid];
+        const childNodes = mergedNodesOf(set);
         if (childNodes) {
             g.loaded = true;
+            g.nodeTotal = set && set.total != null ? set.total : null;
             childNodes.forEach((cn: any) => {
                 if (!cn || !cn.payload) return;
                 const cp = cn.payload;
@@ -111,13 +152,13 @@ function buildGroupTree(nodes: any[], rec: CourseRec, depth: number): CourseGrou
 }
 
 /** 选择展示入口 set：优先捕获到的顶层；否则在已捕获 set 中推断“未被任何分组描述引用”的最顶层 */
-function pickEntry(rec: CourseRec): CourseCaptureItem | null {
+function pickEntry(rec: CourseRec): CourseSetCapture | null {
     if (rec.rootSetId && rec.sets[rec.rootSetId]) return rec.sets[rec.rootSetId];
     const keys = Object.keys(rec.sets);
     if (!keys.length) return null;
     const referenced = new Set<string>();
     keys.forEach((k) => {
-        const nodes = episodeNodesOf(rec.sets[k]);
+        const nodes = mergedNodesOf(rec.sets[k]);
         if (!nodes) return;
         nodes.forEach((n: any) => {
             if (n && n.nodeType !== 6 && n.payload && n.payload.id != null) referenced.add(String(n.payload.id));
@@ -147,8 +188,9 @@ export function buildCourseView(): CourseView | null {
     };
     const detailData = rec.detail && rec.detail.data && rec.detail.data.data;
     if (detailData && detailData.title) view.name = detailData.title;
-    const entry = pickEntry(rec);
-    const nodes = episodeNodesOf(entry);
+    const entrySet = pickEntry(rec);
+    const entry = mergedSetView(entrySet);
+    const nodes = mergedNodesOf(entrySet);
     if (!nodes || !nodes.length) {
         // 只有 detail（或响应异常）而没有课时节点
         return view;
@@ -177,6 +219,7 @@ export function buildCourseView(): CourseView | null {
             title: '课时（入口分组未识别）',
             episodeCount: leafs.length,
             loaded: true,
+            nodeTotal: entrySet && entrySet.total != null ? entrySet.total : null,
             children: [],
             episodes: leafs,
             seconds
@@ -241,6 +284,15 @@ function viewToText(v: CourseView): string {
     return lines.join('\n');
 }
 
+// 叶子分组（直接课时）统计文案；分页未捕获完整（已捕获课时 < 该 set 的 data.total）时追加提示
+function leafStatText(g: CourseGroup): string {
+    let t = g.episodes.length + '课时 · ' + formatDuration(g.seconds);
+    if (g.nodeTotal != null && g.episodes.length < g.nodeTotal) {
+        t += '（部分加载：已捕获 ' + g.episodes.length + '/' + g.nodeTotal + ' 课时，请继续展开加载）';
+    }
+    return t;
+}
+
 function groupStatText(g: CourseGroup): string {
     if (!g.loaded) {
         return g.episodeCount ? (g.episodeCount + '课时，未加载：请手动触发下接口请求') : '未加载';
@@ -249,7 +301,7 @@ function groupStatText(g: CourseGroup): string {
         const st = collectStats(g.children);
         return st.episodes + '课时 · ' + formatDuration(st.seconds) + (st.episodes ? '' : '');
     }
-    return g.episodes.length + '课时 · ' + formatDuration(g.seconds);
+    return leafStatText(g);
 }
 
 function groupToLines(g: CourseGroup, depth: number): string[] {
@@ -304,7 +356,7 @@ function renderGroupBody(g: CourseGroup, depth: number, path: number[]): string 
                 const st = collectStats(ch.children);
                 return st.episodes + '课时' + (st.seconds ? ' · ' + formatDuration(st.seconds) : '');
             }
-            return ch.episodes.length + '课时 · ' + formatDuration(ch.seconds);
+            return leafStatText(ch);
         })();
         html += `<div class="course-sub-group" style="margin-left:${margin}px;">`;
         html += `
@@ -368,7 +420,7 @@ export function renderCoursePanel(): void {
                 const seg = 'cg' + i;
                 const leaf = g.children.length === 0 && g.episodes.length > 0;
                 const stat = g.loaded
-                    ? (g.children.length ? (collectStats(g.children).episodes + '课时 · ' + formatDuration(collectStats(g.children).seconds)) : (g.episodes.length + '课时 · ' + formatDuration(g.seconds)))
+                    ? (g.children.length ? (collectStats(g.children).episodes + '课时 · ' + formatDuration(collectStats(g.children).seconds)) : leafStatText(g))
                     : '课时未加载';
                 html += `
                     <div class="section-title collapsible collapsed" data-section="${seg}">
